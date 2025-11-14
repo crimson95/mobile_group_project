@@ -4,15 +4,15 @@ import '../model/customer.dart';
 @dao
 abstract class CustomerDAO{
 
-  @Query('SELECT * FROM Customer')
+  @Query('SELECT * FROM Customer ORDER BY id ASC')
   Future<List<Customer>> getAllCustomers();
 
   @insert
-  Future<void> insertCustomer(Customer i);
+  Future<int> insertCustomer(Customer i);
 
   @delete
-  Future<void> deleteCustomer(Customer i);
+  Future<int> deleteCustomer(Customer i);
 
   @update
-  Future<void> updateCustomer(Customer i);
+  Future<int> updateCustomer(Customer i);
 }

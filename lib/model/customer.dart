@@ -2,20 +2,20 @@ import 'package:floor/floor.dart';
 
 @entity
 class Customer{
-  static int ID = 1;
-
-  Customer(this.id, this.firstName, this.lastName, this.address, this.bday, this.licenseNum){
-    if(this.id > ID){
-      ID = this.id + 1;
-    }
-  }
-
   @primaryKey
-  final int id;
+  final int? id;
+  final String firstName;
+  final String lastName;
+  final String address;
+  final String bday;
+  final int licenseNum;
 
-  String firstName;
-  String lastName;
-  String address;
-  String bday;
-  int licenseNum;
+  Customer({
+    this.id,
+    required this.firstName,
+    required this.lastName,
+    required this.address,
+    required this.bday,
+    required this.licenseNum
+  });
 }

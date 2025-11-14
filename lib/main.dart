@@ -1,76 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:floor/floor.dart';
+import 'dao/customerDAO.dart';
+import 'dao/customerDatabase.dart';
+import 'model/customer.dart';
+import 'pages/CustomerListPage.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  final database = await $FloorCustomerDatabase.databaseBuilder('customer.db').build();
+  runApp(MyApp(database: database));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.database});
+  final CustomerDatabase database;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Final project',
       theme: ThemeData(
-
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.redAccent),
       ),
-      home: const MyHomePage(title: 'Final project'),
+      home: MainMenu(database: database),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+class MainMenu extends StatelessWidget {
+  final CustomerDatabase database;
+  const MainMenu({super.key, required this.database});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
+      appBar: AppBar(title: const Text('Main Menu')),
       body: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            ElevatedButton(child: Text("Customer List"), onPressed: (){
-              setState(() {
-
-              });
-
-            }),
+            ElevatedButton(child: const Text("Customer List"), onPressed: (){
+              Navigator.push(context, MaterialPageRoute(
+                builder: (_) => CustomerListPage(database: database),
+              ),
+            );
+          },
+        ),
             ElevatedButton(child: Text("Cars for sale"), onPressed: (){
-              setState(() {
-
-              });
-
             }),
             ElevatedButton(child: Text("Boats for sale"), onPressed: (){
-              setState(() {
-
-              });
-
             }),
             ElevatedButton(child: Text("Purchase offer"), onPressed: (){
-              setState(() {
-
-              });
-
             })
           ],
         ),
