@@ -6,33 +6,33 @@ part of 'customerDatabase.dart';
 // FloorGenerator
 // **************************************************************************
 
-abstract class $Customer_DatabaseBuilderContract {
+abstract class $CustomerDatabaseBuilderContract {
   /// Adds migrations to the builder.
-  $Customer_DatabaseBuilderContract addMigrations(List<Migration> migrations);
+  $CustomerDatabaseBuilderContract addMigrations(List<Migration> migrations);
 
   /// Adds a database [Callback] to the builder.
-  $Customer_DatabaseBuilderContract addCallback(Callback callback);
+  $CustomerDatabaseBuilderContract addCallback(Callback callback);
 
   /// Creates the database and initializes it.
-  Future<Customer_Database> build();
+  Future<CustomerDatabase> build();
 }
 
 // ignore: avoid_classes_with_only_static_members
-class $FloorCustomer_Database {
+class $FloorCustomerDatabase {
   /// Creates a database builder for a persistent database.
   /// Once a database is built, you should keep a reference to it and re-use it.
-  static $Customer_DatabaseBuilderContract databaseBuilder(String name) =>
-      _$Customer_DatabaseBuilder(name);
+  static $CustomerDatabaseBuilderContract databaseBuilder(String name) =>
+      _$CustomerDatabaseBuilder(name);
 
   /// Creates a database builder for an in memory database.
   /// Information stored in an in memory database disappears when the process is killed.
   /// Once a database is built, you should keep a reference to it and re-use it.
-  static $Customer_DatabaseBuilderContract inMemoryDatabaseBuilder() =>
-      _$Customer_DatabaseBuilder(null);
+  static $CustomerDatabaseBuilderContract inMemoryDatabaseBuilder() =>
+      _$CustomerDatabaseBuilder(null);
 }
 
-class _$Customer_DatabaseBuilder implements $Customer_DatabaseBuilderContract {
-  _$Customer_DatabaseBuilder(this.name);
+class _$CustomerDatabaseBuilder implements $CustomerDatabaseBuilderContract {
+  _$CustomerDatabaseBuilder(this.name);
 
   final String? name;
 
@@ -41,23 +41,23 @@ class _$Customer_DatabaseBuilder implements $Customer_DatabaseBuilderContract {
   Callback? _callback;
 
   @override
-  $Customer_DatabaseBuilderContract addMigrations(List<Migration> migrations) {
+  $CustomerDatabaseBuilderContract addMigrations(List<Migration> migrations) {
     _migrations.addAll(migrations);
     return this;
   }
 
   @override
-  $Customer_DatabaseBuilderContract addCallback(Callback callback) {
+  $CustomerDatabaseBuilderContract addCallback(Callback callback) {
     _callback = callback;
     return this;
   }
 
   @override
-  Future<Customer_Database> build() async {
+  Future<CustomerDatabase> build() async {
     final path = name != null
         ? await sqfliteDatabaseFactory.getDatabasePath(name!)
         : ':memory:';
-    final database = _$Customer_Database();
+    final database = _$CustomerDatabase();
     database.database = await database.open(
       path,
       _migrations,
@@ -67,8 +67,8 @@ class _$Customer_DatabaseBuilder implements $Customer_DatabaseBuilderContract {
   }
 }
 
-class _$Customer_Database extends Customer_Database {
-  _$Customer_Database([StreamController<String>? listener]) {
+class _$CustomerDatabase extends CustomerDatabase {
+  _$CustomerDatabase([StreamController<String>? listener]) {
     changeListener = listener ?? StreamController<String>.broadcast();
   }
 
@@ -96,7 +96,7 @@ class _$Customer_Database extends Customer_Database {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Customer` (`id` INTEGER NOT NULL, `firstName` TEXT NOT NULL, `lastName` TEXT NOT NULL, `address` TEXT NOT NULL, `bday` TEXT NOT NULL, `licenseNum` INTEGER NOT NULL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Customer` (`id` INTEGER, `firstName` TEXT NOT NULL, `lastName` TEXT NOT NULL, `address` TEXT NOT NULL, `bday` TEXT NOT NULL, `licenseNum` INTEGER NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -165,28 +165,30 @@ class _$CustomerDAO extends CustomerDAO {
 
   @override
   Future<List<Customer>> getAllCustomers() async {
-    return _queryAdapter.queryList('SELECT * FROM Customer',
+    return _queryAdapter.queryList('SELECT * FROM Customer ORDER BY id ASC',
         mapper: (Map<String, Object?> row) => Customer(
-            row['id'] as int,
-            row['firstName'] as String,
-            row['lastName'] as String,
-            row['address'] as String,
-            row['bday'] as String,
-            row['licenseNum'] as int));
+            id: row['id'] as int?,
+            firstName: row['firstName'] as String,
+            lastName: row['lastName'] as String,
+            address: row['address'] as String,
+            bday: row['bday'] as String,
+            licenseNum: row['licenseNum'] as int));
   }
 
   @override
-  Future<void> insertCustomer(Customer i) async {
-    await _customerInsertionAdapter.insert(i, OnConflictStrategy.abort);
+  Future<int> insertCustomer(Customer i) {
+    return _customerInsertionAdapter.insertAndReturnId(
+        i, OnConflictStrategy.abort);
   }
 
   @override
-  Future<void> updateCustomer(Customer i) async {
-    await _customerUpdateAdapter.update(i, OnConflictStrategy.abort);
+  Future<int> updateCustomer(Customer i) {
+    return _customerUpdateAdapter.updateAndReturnChangedRows(
+        i, OnConflictStrategy.abort);
   }
 
   @override
-  Future<void> deleteCustomer(Customer i) async {
-    await _customerDeletionAdapter.delete(i);
+  Future<int> deleteCustomer(Customer i) {
+    return _customerDeletionAdapter.deleteAndReturnChangedRows(i);
   }
 }
