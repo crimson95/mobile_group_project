@@ -172,7 +172,7 @@ class _$CustomerDAO extends CustomerDAO {
             lastName: row['lastName'] as String,
             address: row['address'] as String,
             bday: row['bday'] as String,
-            licenseNum: row['licenseNum'] as int));
+            licenseNum: row['licenseNum'] as String));
   }
 
   @override
