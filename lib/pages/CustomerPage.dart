@@ -1,6 +1,7 @@
 import 'package:final_group_project/dao/customerDatabase.dart';
 import 'package:flutter/material.dart';
 import 'package:floor/floor.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../dao/customerDAO.dart';
 import '../model/customer.dart';
 
@@ -72,12 +73,36 @@ class _CustomerPageState extends State<CustomerPage> {
       const SnackBar(content: Text("Customer added successfully.")),
     );
 
+    await _saveLastInput();
+
     // clear TextFields
     _controller_firstName.clear();
     _controller_lastName.clear();
     _controller_address.clear();
     _controller_bday.clear();
     _controller_licenseNum.clear();
+  }
+
+  Future<void> _saveLastInput() async{
+    final storage = FlutterSecureStorage();
+    await storage.write(key: "firstName", value: _controller_firstName.text);
+    await storage.write(key: "lastName", value: _controller_lastName.text);
+    await storage.write(key: "address", value: _controller_address.text);
+    await storage.write(key: "bday", value: _controller_bday.text);
+    await storage.write(key: "licenseNum", value: _controller_licenseNum.text);
+  }
+
+  void _copyLastInput() async{
+    final storage = FlutterSecureStorage();
+    _controller_firstName.text = await storage.read(key: "firstName") ?? "";
+    _controller_lastName.text = await storage.read(key: "lastName") ?? "";
+    _controller_address.text = await storage.read(key: "address") ?? "";
+    _controller_bday.text = await storage.read(key: "bday") ?? "";
+    _controller_licenseNum.text = await storage.read(key: "licenseNum") ?? "";
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Last input restored.")),
+    );
   }
 
   @override
