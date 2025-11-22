@@ -1,8 +1,6 @@
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:final_group_project/dao/customerDatabase.dart';
 import 'package:flutter/material.dart';
-import 'package:floor/floor.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../dao/customerDAO.dart';
 import '../model/customer.dart';
 
