@@ -4,15 +4,15 @@ import 'package:floor/floor.dart';
 import '../dao/customerDAO.dart';
 import '../model/customer.dart';
 
-class CustomerListPage extends StatefulWidget {
+class CustomerPage extends StatefulWidget {
   final CustomerDatabase database;
-  const CustomerListPage({super.key, required this.database});
+  const CustomerPage({super.key, required this.database});
 
   @override
-  State<CustomerListPage> createState() => _CustomerListPageState();
+  State<CustomerPage> createState() => _CustomerPageState();
 }
 
-class _CustomerListPageState extends State<CustomerListPage> {
+class _CustomerPageState extends State<CustomerPage> {
   List<Customer> list1 = [];
   Customer? selectedCustomer = null;
 
@@ -33,14 +33,51 @@ class _CustomerListPageState extends State<CustomerListPage> {
     _controller_bday = TextEditingController();
     _controller_licenseNum = TextEditingController();
 
-    $FloorCustomerDatabase.databaseBuilder('CustomerFile.db').build().then((database){
-      customerDAO = database.myDAO;
-      customerDAO.getAllCustomers().then((listOfCustomers){
-        setState(() {
-          list1.addAll(listOfCustomers);
-        });
+    customerDAO = widget.database.myDAO;
+    customerDAO.getAllCustomers().then((listOfCustomers) {
+      setState(() {
+        list1.addAll(listOfCustomers);
       });
     });
+  }
+
+  void _addCustomer() async{
+    // create a non-ID object (id = null)
+    Customer newCustomer = Customer(
+        firstName: _controller_firstName.text,
+        lastName: _controller_lastName.text,
+        address: _controller_address.text,
+        bday: _controller_bday.text,
+        licenseNum: _controller_licenseNum.text);
+
+    // insert database, floor auto-generate ID
+    int newID = await customerDAO.insertCustomer(newCustomer);
+
+    // create a customer data with ID
+    Customer newIDCustomer = Customer(
+        id: newID,
+        firstName: newCustomer.firstName,
+        lastName: newCustomer.lastName,
+        address: newCustomer.address,
+        bday: newCustomer.bday,
+        licenseNum: newCustomer.licenseNum);
+
+    // update UI
+    setState(() {
+      list1.add(newIDCustomer);
+    });
+
+    // snackbar
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Customer added successfully.")),
+    );
+
+    // clear TextFields
+    _controller_firstName.clear();
+    _controller_lastName.clear();
+    _controller_address.clear();
+    _controller_bday.clear();
+    _controller_licenseNum.clear();
   }
 
   @override
@@ -85,6 +122,177 @@ class _CustomerListPageState extends State<CustomerListPage> {
     }
   }
 
+  Widget buildForm() {
+    bool isWide = MediaQuery.of(context).size.width > 720;
+
+    if (!isWide) {
+      // portrait view
+      return Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextField(
+              controller: _controller_firstName,
+              decoration: const InputDecoration(
+                labelText: "First Name",
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 10),
+
+            TextField(
+              controller: _controller_lastName,
+              decoration: const InputDecoration(
+                labelText: "Last Name",
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 10),
+
+            TextField(
+              controller: _controller_address,
+              decoration: const InputDecoration(
+                labelText: "Address",
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 10),
+
+            TextField(
+              controller: _controller_bday,
+              decoration: const InputDecoration(
+                labelText: "Birthday",
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 10),
+
+            TextField(
+              controller: _controller_licenseNum,
+              decoration: const InputDecoration(
+                labelText: "License Number",
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 10),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  child: const Text("Add"),
+                  onPressed: _addCustomer,
+                ),
+                ElevatedButton(
+                  child: const Text("Copy Last Input"),
+                  onPressed: _copyLastInput,
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    }
+
+    else {
+      // landscape view
+      return Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          children: [
+            Expanded(child: TextField(
+              controller: _controller_firstName,
+              decoration: const InputDecoration(
+                labelText: "First Name",
+                border: OutlineInputBorder(),
+              ),
+            )),
+            const SizedBox(width: 10),
+
+            Expanded(child: TextField(
+              controller: _controller_lastName,
+              decoration: const InputDecoration(
+                labelText: "Last Name",
+                border: OutlineInputBorder(),
+              ),
+            )),
+            const SizedBox(width: 10),
+
+            Expanded(child: TextField(
+              controller: _controller_address,
+              decoration: const InputDecoration(
+                labelText: "Address",
+                border: OutlineInputBorder(),
+              ),
+            )),
+            const SizedBox(width: 10),
+
+            Expanded(child: TextField(
+              controller: _controller_bday,
+              decoration: const InputDecoration(
+                labelText: "Birthday",
+                border: OutlineInputBorder(),
+              ),
+            )),
+            const SizedBox(width: 10),
+
+            Expanded(child: TextField(
+              controller: _controller_licenseNum,
+              decoration: const InputDecoration(
+                labelText: "License Number",
+                border: OutlineInputBorder(),
+              ),
+            )),
+            const SizedBox(width: 10),
+
+            ElevatedButton(
+              child: const Text("Add"),
+              onPressed: _addCustomer,
+            ),
+            const SizedBox(width: 10),
+
+            ElevatedButton(
+              child: const Text("Copy Last Input"),
+              onPressed: _copyLastInput,
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  Widget ListPage() {
+    return Column(
+      children: [
+        buildForm(),
+        Expanded(
+          child: (list1.isEmpty)
+              ? const Center(child: Text("There is no customer in list"))
+              : buildListView(),
+        ),
+      ],
+    );
+  }
+
+  Widget buildListView() {
+    return ListView.builder(
+      itemCount: list1.length,
+      itemBuilder: (context, index) {
+        final c = list1[index];
+        return ListTile(
+          title: Text("${c.firstName} ${c.lastName}"),
+          subtitle: Text("Address: ${c.address}"),
+          onTap: () {
+            setState(() {
+              selectedCustomer = c;
+            });
+          },
+        );
+      },
+    );
+  }
+
   Widget DetailsPage(){
     if(selectedCustomer != null){
       return Center(child: Column(children: [
@@ -113,93 +321,5 @@ class _CustomerListPageState extends State<CustomerListPage> {
     else{
       return Text("Please select a customer from the list", style: TextStyle(fontSize: 30.0));
     }
-  }
-
-  Widget ListPage(){
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Row( mainAxisAlignment: MainAxisAlignment.center, children:[
-            Flexible(flex:2, child:
-            TextField(controller: _controller_firstName,
-              decoration: InputDecoration(
-                hintText: "Type first name",
-                border: OutlineInputBorder(),
-              ),
-            )),
-            Flexible(flex:2, child:
-            TextField(controller: _controller_lastName,
-              decoration: InputDecoration(
-                hintText: "Type last name",
-                border: OutlineInputBorder(),
-              ),
-            )),
-            Flexible(flex:2, child:
-            TextField(controller: _controller_address,
-              decoration: InputDecoration(
-                hintText: "Type address",
-                border: OutlineInputBorder(),
-              ),
-            )),
-            Flexible(flex:2, child:
-            TextField(controller: _controller_bday,
-              decoration: InputDecoration(
-                hintText: "Type birthday",
-                border: OutlineInputBorder(),
-              ),
-            )),
-            Flexible(flex:2, child:
-            TextField(controller: _controller_licenseNum,
-              decoration: InputDecoration(
-                hintText: "Type license number",
-                border: OutlineInputBorder(),
-              ),
-            )),
-            Flexible(
-                flex:2,
-                child: ElevatedButton( child:Text("Add"), onPressed:() {
-                  setState(() {
-                    int? licenceNum = int.tryParse(_controller_licenseNum.value.text);
-
-                    Customer newCustomer = Customer(
-                        firstName: _controller_firstName.value.text,
-                        lastName: _controller_lastName.value.text,
-                        address: _controller_address.value.text,
-                        bday: _controller_bday.value.text,
-                        licenseNum: licenceNum!.toInt());
-                    customerDAO.insertCustomer(newCustomer);
-
-                    list1.add(newCustomer);
-                    _controller_firstName.text = "";
-                    _controller_lastName.text = "";
-                    _controller_address.text = "";
-                    _controller_bday.text = "";
-                    _controller_licenseNum.text = "";
-                  });
-                } )
-
-            ),
-          ]),
-
-          Expanded(child:
-          (list1.length == 0)?
-          Text("There is no customer in list")
-              :
-          ListView.builder(
-              itemCount: list1.length,
-              itemBuilder:(context, rowNum) =>
-                  GestureDetector(child:Center(child: Text("ID ${list1[rowNum].id} "
-                      "Name: ${list1[rowNum].firstName} ${list1[rowNum].lastName} "
-                      "Address: ${list1[rowNum].address} Birthday: ${list1[rowNum].bday} "
-                      "License Number: ${list1[rowNum].licenseNum}")),
-
-                    onTap: (){
-                      setState(() {selectedCustomer = list1[rowNum];});
-                    },
-                  )
-          )
-          )
-        ]);
   }
 }

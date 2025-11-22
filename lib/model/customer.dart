@@ -8,7 +8,7 @@ class Customer{
   final String lastName;
   final String address;
   final String bday;
-  final int licenseNum;
+  final String licenseNum;
 
   Customer({
     this.id,
