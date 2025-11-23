@@ -134,7 +134,7 @@ class _CustomerPageState extends State<CustomerPage> {
 
     if((width>height) && (width > 720)){
       return Row(children: [
-        Expanded(child: ListPage(), flex: 1),
+        Expanded(child: ListPage(), flex: 2),
         Expanded(child: DetailsPage(), flex: 2)
       ]);
     }
@@ -147,143 +147,155 @@ class _CustomerPageState extends State<CustomerPage> {
   }
 
   Widget buildForm() {
-    bool isWide = MediaQuery.of(context).size.width > 720;
+    return LayoutBuilder(
+        builder: (context, constraints) {
+          bool isWide = constraints.maxWidth > 720;
 
-    if (!isWide) {
-      // portrait view
-      return Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              controller: _controller_firstName,
-              decoration: const InputDecoration(
-                labelText: "First Name",
-                border: OutlineInputBorder(),
-              ),
+          if (!isWide) {
+            // portrait view
+            return _buildVerticalForm();
+          }
+
+          else {
+            // landscape view
+            return _buildHorizontalForm();
+          }
+        },
+    );
+  }
+
+  Widget _buildVerticalForm(){
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          TextField(
+            controller: _controller_firstName,
+            decoration: const InputDecoration(
+              labelText: "First Name",
+              border: OutlineInputBorder(),
             ),
-            const SizedBox(height: 10),
+          ),
+          const SizedBox(height: 10),
 
-            TextField(
-              controller: _controller_lastName,
-              decoration: const InputDecoration(
-                labelText: "Last Name",
-                border: OutlineInputBorder(),
-              ),
+          TextField(
+            controller: _controller_lastName,
+            decoration: const InputDecoration(
+              labelText: "Last Name",
+              border: OutlineInputBorder(),
             ),
-            const SizedBox(height: 10),
+          ),
+          const SizedBox(height: 10),
 
-            TextField(
-              controller: _controller_address,
-              decoration: const InputDecoration(
-                labelText: "Address",
-                border: OutlineInputBorder(),
-              ),
+          TextField(
+            controller: _controller_address,
+            decoration: const InputDecoration(
+              labelText: "Address",
+              border: OutlineInputBorder(),
             ),
-            const SizedBox(height: 10),
+          ),
+          const SizedBox(height: 10),
 
-            TextField(
-              controller: _controller_bday,
-              decoration: const InputDecoration(
-                labelText: "Birthday",
-                border: OutlineInputBorder(),
-              ),
+          TextField(
+            controller: _controller_bday,
+            decoration: const InputDecoration(
+              labelText: "Birthday",
+              border: OutlineInputBorder(),
             ),
-            const SizedBox(height: 10),
+          ),
+          const SizedBox(height: 10),
 
-            TextField(
-              controller: _controller_licenseNum,
-              decoration: const InputDecoration(
-                labelText: "License Number",
-                border: OutlineInputBorder(),
-              ),
+          TextField(
+            controller: _controller_licenseNum,
+            decoration: const InputDecoration(
+              labelText: "License Number",
+              border: OutlineInputBorder(),
             ),
-            const SizedBox(height: 10),
+          ),
+          const SizedBox(height: 10),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  child: const Text("Add"),
-                  onPressed: _addCustomer,
-                ),
-                ElevatedButton(
-                  child: const Text("Copy Last Input"),
-                  onPressed: _copyLastInput,
-                ),
-              ],
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                child: const Text("Add"),
+                onPressed: _addCustomer,
+              ),
+              ElevatedButton(
+                child: const Text("Copy Last Input"),
+                onPressed: _copyLastInput,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHorizontalForm(){
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Row(
+        children: [
+          Expanded(child: TextField(
+            controller: _controller_firstName,
+            decoration: const InputDecoration(
+              labelText: "First Name",
+              border: OutlineInputBorder(),
             ),
-          ],
-        ),
-      );
-    }
+          )),
+          const SizedBox(width: 10),
 
-    else {
-      // landscape view
-      return Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          children: [
-            Expanded(child: TextField(
-              controller: _controller_firstName,
-              decoration: const InputDecoration(
-                labelText: "First Name",
-                border: OutlineInputBorder(),
-              ),
-            )),
-            const SizedBox(width: 10),
-
-            Expanded(child: TextField(
-              controller: _controller_lastName,
-              decoration: const InputDecoration(
-                labelText: "Last Name",
-                border: OutlineInputBorder(),
-              ),
-            )),
-            const SizedBox(width: 10),
-
-            Expanded(child: TextField(
-              controller: _controller_address,
-              decoration: const InputDecoration(
-                labelText: "Address",
-                border: OutlineInputBorder(),
-              ),
-            )),
-            const SizedBox(width: 10),
-
-            Expanded(child: TextField(
-              controller: _controller_bday,
-              decoration: const InputDecoration(
-                labelText: "Birthday",
-                border: OutlineInputBorder(),
-              ),
-            )),
-            const SizedBox(width: 10),
-
-            Expanded(child: TextField(
-              controller: _controller_licenseNum,
-              decoration: const InputDecoration(
-                labelText: "License Number",
-                border: OutlineInputBorder(),
-              ),
-            )),
-            const SizedBox(width: 10),
-
-            ElevatedButton(
-              child: const Text("Add"),
-              onPressed: _addCustomer,
+          Expanded(child: TextField(
+            controller: _controller_lastName,
+            decoration: const InputDecoration(
+              labelText: "Last Name",
+              border: OutlineInputBorder(),
             ),
-            const SizedBox(width: 10),
+          )),
+          const SizedBox(width: 10),
 
-            ElevatedButton(
-              child: const Text("Copy Last Input"),
-              onPressed: _copyLastInput,
+          Expanded(child: TextField(
+            controller: _controller_address,
+            decoration: const InputDecoration(
+              labelText: "Address",
+              border: OutlineInputBorder(),
             ),
-          ],
-        ),
-      );
-    }
+          )),
+          const SizedBox(width: 10),
+
+          Expanded(child: TextField(
+            controller: _controller_bday,
+            decoration: const InputDecoration(
+              labelText: "Birthday",
+              border: OutlineInputBorder(),
+            ),
+          )),
+          const SizedBox(width: 10),
+
+          Expanded(child: TextField(
+            controller: _controller_licenseNum,
+            decoration: const InputDecoration(
+              labelText: "License Number",
+              border: OutlineInputBorder(),
+            ),
+          )),
+          const SizedBox(width: 10),
+
+          ElevatedButton(
+            child: const Text("Add"),
+            onPressed: _addCustomer,
+          ),
+          const SizedBox(width: 10),
+
+          ElevatedButton(
+            child: const Text("Copy Last Input"),
+            onPressed: _copyLastInput,
+          ),
+        ],
+      ),
+    );
   }
 
   Widget ListPage() {
@@ -306,7 +318,9 @@ class _CustomerPageState extends State<CustomerPage> {
         final c = list1[index];
         return ListTile(
           title: Text("${c.firstName} ${c.lastName}"),
-          subtitle: Text("Address: ${c.address}"),
+          subtitle: Text("Address: ${c.address}\n"
+                        "Birthday: ${c.bday}\n"
+                        "License Number: ${c.licenseNum}"),
           onTap: () {
             setState(() {
               selectedCustomer = c;
@@ -343,7 +357,15 @@ class _CustomerPageState extends State<CustomerPage> {
       );
     }
     else{
-      return Text("Please select a customer from the list", style: TextStyle(fontSize: 30.0));
+      return Center(
+        child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text("Please select a customer from the list",
+                style: TextStyle(fontSize: 30.0),
+              textAlign: TextAlign.center,
+            ),
+        ),
+      );
     }
   }
 }
