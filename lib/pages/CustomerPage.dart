@@ -14,7 +14,8 @@ class CustomerPage extends StatefulWidget {
 
 class _CustomerPageState extends State<CustomerPage> {
   List<Customer> list1 = [];
-  Customer? selectedCustomer = null;
+  Customer? selectedCustomer;
+  bool isEditing = false; // controls whether Add or Update
 
   late TextEditingController _controller_firstName;
   late TextEditingController _controller_lastName;
@@ -34,11 +35,31 @@ class _CustomerPageState extends State<CustomerPage> {
     _controller_licenseNum = TextEditingController();
 
     customerDAO = widget.database.myDAO;
-    customerDAO.getAllCustomers().then((listOfCustomers) {
+    customerDAO.getAllCustomers().then((list){
       setState(() {
-        list1.addAll(listOfCustomers);
+        list1 = list;
       });
     });
+  }
+
+  @override
+  void dispose() {
+    //free memory:
+    _controller_firstName.dispose();
+    _controller_lastName.dispose();
+    _controller_address.dispose();
+    _controller_bday.dispose();
+    _controller_licenseNum.dispose();
+    super.dispose();
+  }
+
+  void _clearInput(){
+    // clear TextFields
+    _controller_firstName.clear();
+    _controller_lastName.clear();
+    _controller_address.clear();
+    _controller_bday.clear();
+    _controller_licenseNum.clear();
   }
 
   void _addCustomer() async{
@@ -48,7 +69,8 @@ class _CustomerPageState extends State<CustomerPage> {
         lastName: _controller_lastName.text,
         address: _controller_address.text,
         bday: _controller_bday.text,
-        licenseNum: _controller_licenseNum.text);
+        licenseNum: _controller_licenseNum.text
+    );
 
     // insert database, floor auto-generate ID
     int newID = await customerDAO.insertCustomer(newCustomer);
@@ -60,7 +82,8 @@ class _CustomerPageState extends State<CustomerPage> {
         lastName: newCustomer.lastName,
         address: newCustomer.address,
         bday: newCustomer.bday,
-        licenseNum: newCustomer.licenseNum);
+        licenseNum: newCustomer.licenseNum
+    );
 
     // update UI
     setState(() {
@@ -74,12 +97,37 @@ class _CustomerPageState extends State<CustomerPage> {
 
     await _saveLastInput();
 
-    // clear TextFields
-    _controller_firstName.clear();
-    _controller_lastName.clear();
-    _controller_address.clear();
-    _controller_bday.clear();
-    _controller_licenseNum.clear();
+    _clearInput();
+  }
+
+  void _updateCustomer() async {
+    if (selectedCustomer == null) return;
+
+    Customer updated = Customer(
+      id: selectedCustomer!.id,
+      firstName: _controller_firstName.text,
+      lastName: _controller_lastName.text,
+      address: _controller_address.text,
+      bday: _controller_bday.text,
+      licenseNum: _controller_licenseNum.text,
+    );
+
+    await customerDAO.updateCustomer(updated);
+
+    // update list
+    List<Customer> refreshed = await customerDAO.getAllCustomers();
+
+    setState(() {
+      list1 = refreshed;
+      isEditing = false;
+      selectedCustomer = updated; //back to left side
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Customer updated!")),
+    );
+
+    _clearInput();
   }
 
   Future<void> _saveLastInput() async{
@@ -105,23 +153,10 @@ class _CustomerPageState extends State<CustomerPage> {
   }
 
   @override
-  void dispose() {
-    //free memory:
-    _controller_firstName.dispose();
-    _controller_lastName.dispose();
-    _controller_address.dispose();
-    _controller_bday.dispose();
-    _controller_licenseNum.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
-
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: const Text('Customer Page')
       ),
       body: reactiveLayout(),
     );
@@ -219,8 +254,8 @@ class _CustomerPageState extends State<CustomerPage> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ElevatedButton(
-                child: const Text("Add"),
-                onPressed: _addCustomer,
+                onPressed: isEditing ? _updateCustomer : _addCustomer,
+                child: Text(isEditing ? "Update" : "Add"),
               ),
               ElevatedButton(
                 child: const Text("Copy Last Input"),
@@ -284,8 +319,8 @@ class _CustomerPageState extends State<CustomerPage> {
           const SizedBox(width: 10),
 
           ElevatedButton(
-            child: const Text("Add"),
-            onPressed: _addCustomer,
+            onPressed: isEditing ? _updateCustomer : _addCustomer,
+            child: Text(isEditing ? "Update" : "Add"),
           ),
           const SizedBox(width: 10),
 
@@ -313,6 +348,7 @@ class _CustomerPageState extends State<CustomerPage> {
 
   Widget buildListView() {
     return ListView.builder(
+      key: UniqueKey(),
       itemCount: list1.length,
       itemBuilder: (context, index) {
         final c = list1[index];
@@ -331,41 +367,71 @@ class _CustomerPageState extends State<CustomerPage> {
     );
   }
 
-  Widget DetailsPage(){
-    if(selectedCustomer != null){
-      return Center(child: Column(children: [
-        Text("ID: ${selectedCustomer!.id}", style: TextStyle(fontSize: 40.0)),
-        Text("First Name: ${selectedCustomer!.firstName}", style: TextStyle(fontSize: 40.0)),
-        Text("Last Name: ${selectedCustomer!.lastName}", style: TextStyle(fontSize: 40.0)),
-        Text("Address: ${selectedCustomer!.address}", style: TextStyle(fontSize: 40.0)),
-        Text("Birthday: ${selectedCustomer!.bday}", style: TextStyle(fontSize: 40.0)),
-        Text("License Number: ${selectedCustomer!.licenseNum}", style: TextStyle(fontSize: 40.0)),
-        Spacer(),
-        OutlinedButton(onPressed: () async{
-          await customerDAO.deleteCustomer(selectedCustomer!);
-          setState(() {
-            list1.remove(selectedCustomer);
-            selectedCustomer = null;
-          });
-        }, child: Text("Delete")),
-        OutlinedButton(onPressed: (){
-          setState(() {
-            selectedCustomer = null;
-          });
-        }, child: Text("Close"))
-      ], mainAxisAlignment: MainAxisAlignment.center,)
-      );
-    }
-    else{
+  Widget DetailsPage() {
+    if (selectedCustomer == null) {
       return Center(
-        child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Text("Please select a customer from the list",
-                style: TextStyle(fontSize: 30.0),
-              textAlign: TextAlign.center,
-            ),
+        child: Text(
+          "Please select a customer from the list",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 30),
         ),
       );
     }
+
+
+    // ========= VIEW MODE =========
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text("ID: ${selectedCustomer!.id}", style: TextStyle(fontSize: 28)),
+          Text("First Name: ${selectedCustomer!.firstName}",
+              style: TextStyle(fontSize: 28)),
+          Text("Last Name: ${selectedCustomer!.lastName}",
+              style: TextStyle(fontSize: 28)),
+          Text("Address: ${selectedCustomer!.address}",
+              style: TextStyle(fontSize: 28)),
+          Text("Birthday: ${selectedCustomer!.bday}",
+              style: TextStyle(fontSize: 28)),
+          Text("License Number: ${selectedCustomer!.licenseNum}",
+              style: TextStyle(fontSize: 28)),
+          SizedBox(height: 30),
+
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                _controller_firstName.text = selectedCustomer!.firstName;
+                _controller_lastName.text = selectedCustomer!.lastName;
+                _controller_address.text = selectedCustomer!.address;
+                _controller_bday.text = selectedCustomer!.bday;
+                _controller_licenseNum.text = selectedCustomer!.licenseNum;
+                isEditing = true;
+              });
+            },
+            child: Text("Edit"),
+          ),
+
+          ElevatedButton(
+            onPressed: () async {
+              await customerDAO.deleteCustomer(selectedCustomer!);
+              setState(() {
+                list1.remove(selectedCustomer);
+                selectedCustomer = null;
+              });
+            },
+            child: Text("Delete"),
+          ),
+
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                selectedCustomer = null;
+              });
+            },
+            child: Text("Close"),
+          ),
+        ],
+      ),
+    );
   }
 }
