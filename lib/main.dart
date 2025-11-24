@@ -22,11 +22,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Final project',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        appBarTheme: AppBarTheme(
-          backgroundColor:Theme.of(context).colorScheme.inversePrimary,
-        ),
-
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.redAccent),
       ),
       home: MainMenu(database: database),
     );
@@ -41,8 +37,7 @@ class MainMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: const Text('Main Menu')),
+      appBar: AppBar(title: const Text('Main Menu')),
       body: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
