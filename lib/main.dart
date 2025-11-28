@@ -1,73 +1,20 @@
 import 'package:flutter/material.dart';
-import 'dao/customerDatabase.dart';
-import 'pages/CustomerPage.dart';
+import 'pages/boats/boat_list_page.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  final database = await $FloorCustomerDatabase
-      .databaseBuilder('customer.db')
-      .build();
-
-  runApp(MyApp(database: database));
+void main() {
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final CustomerDatabase database;
-
-  const MyApp({super.key, required this.database});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Final project',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.redAccent),
-      ),
-      home: MainMenu(database: database),
-    );
-  }
-}
-
-class MainMenu extends StatelessWidget {
-  final CustomerDatabase database;
-
-  const MainMenu({super.key, required this.database});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Main Menu')),
-      body: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ElevatedButton(
-              child: const Text("Customer List"),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => CustomerPage(database: database),
-                  ),
-                );
-              },
-            ),
-            ElevatedButton(
-              child: const Text("Cars for sale"),
-              onPressed: () {},
-            ),
-            ElevatedButton(
-              child: const Text("Boats for sale"),
-              onPressed: () {},
-            ),
-            ElevatedButton(
-              child: const Text("Purchase offer"),
-              onPressed: () {},
-            ),
-          ],
-        ),
-      ),
+      debugShowCheckedModeBanner: false,
+      title: 'Boats App',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: const BoatListPage(), // start on your Boats screen
     );
   }
 }
