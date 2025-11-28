@@ -1,5 +1,5 @@
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
-import 'package:final_group_project/dao/customerDatabase.dart';
+import 'package:final_group_project/CustomerPage/dao/customerDatabase.dart';
 import 'package:flutter/material.dart';
 import '../dao/customerDAO.dart';
 import '../model/customer.dart';
@@ -152,11 +152,20 @@ class _CustomerPageState extends State<CustomerPage> {
     );
   }
 
+  void _showHelpDialog(){
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text('Customer Page')
+          title: const Text('Customer Page'),
+        actions: [
+          IconButton(onPressed: _showHelpDialog, icon: const Icon(Icons.help_outline),
+          tooltip: 'Help',
+          ),
+        ],
       ),
       body: reactiveLayout(),
     );
