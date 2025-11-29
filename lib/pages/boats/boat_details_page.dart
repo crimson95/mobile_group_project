@@ -115,7 +115,7 @@ class _BoatDetailsPageState extends State<BoatDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Boat details')),
+      appBar: AppBar(title: const Text('Boat Details')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -124,7 +124,7 @@ class _BoatDetailsPageState extends State<BoatDetailsPage> {
             children: [
               TextFormField(
                 controller: _yearController,
-                decoration: const InputDecoration(labelText: 'Year built'),
+                decoration: const InputDecoration(labelText: 'Year Built'),
                 keyboardType: TextInputType.number,
                 validator: (value) =>
                 value == null || value.isEmpty ? 'Year required' : null,

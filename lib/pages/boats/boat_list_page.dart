@@ -31,11 +31,12 @@ class _BoatListPageState extends State<BoatListPage> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Boats for sale'),
+        title: const Text('Boats for Sale'),
       ),
       bottomNavigationBar: boats.isEmpty
           ? null
