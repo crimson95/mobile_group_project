@@ -1,11 +1,16 @@
+import 'package:floor/floor.dart';
+
+@entity
 class Car {
+  @primaryKey
   final int id;
+
   final int year;
-  final String make;
-  final String model;
-  final String price;
-  final String mileage;
-  final String type;
+  String make;
+  String model;
+  String price;
+  String mileage;
+  String type;
 
   Car({
     required this.id,

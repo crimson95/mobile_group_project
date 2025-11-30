@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../model/car.dart';
+
 class CarFormPage extends StatefulWidget {
   const CarFormPage({super.key});
 
@@ -94,5 +96,31 @@ class _CarFormPageState extends State<CarFormPage> {
         ),
       ),
     );
+  }
+  //Save button with SnackBar
+  void _onSavePressed(){
+    final title = titleController.text.trim();
+    final yearText = yearController.text.trim();
+    final make = makeController.text.trim();
+    final model = modelController.text.trim();
+
+    if (title.isEmpty || yearText.isEmpty || make.isEmpty || model.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please fill in all fields.")),
+      );
+      return;
+    }
+
+    final newCar = Car(
+      id: DateTime.now().millisecondsSinceEpoch, // 临时 ID
+      year: int.parse(yearText),
+      make: make,
+      model: model,
+      price: "N/A",
+      mileage: "N/A",
+      type: "Unknown",
+    );
+
+    Navigator.pop(context, newCar);
   }
 }

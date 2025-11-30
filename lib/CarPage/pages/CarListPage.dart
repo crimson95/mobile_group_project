@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../model/car.dart';
 import 'CarListPageState.dart';
 import 'CarFormPage.dart';
+import '../model/car.dart';
+import '../dao/CarDatabase.dart';
 
 final List<Car> sampleCars = [
   Car(
@@ -61,11 +63,17 @@ class CarListPageState extends State<CarListPage> {
         ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          final newCar = await Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => const CarFormPage()),
           );
+
+          if (newCar != null) {
+            setState(() {
+              sampleCars.add(newCar);
+            });
+          }
         },
       ),
     );
