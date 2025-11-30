@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'dao/customerDatabase.dart';
-import 'pages/CustomerPage.dart';
+import 'CarPage/pages/carlistpage.dart';
+import 'CustomerList/dao/customerDatabase.dart';
+import 'CustomerList/pages/CustomerPage.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,7 +57,12 @@ class MainMenu extends StatelessWidget {
             ),
             ElevatedButton(
               child: const Text("Cars for sale"),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const CarListPage()),
+                );
+              },
             ),
             ElevatedButton(
               child: const Text("Boats for sale"),
