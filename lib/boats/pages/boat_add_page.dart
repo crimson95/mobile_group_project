@@ -133,7 +133,7 @@ class _BoatAddPageState extends State<BoatAddPage> {
                 decoration: InputDecoration(labelText: loc.translate('year_built')!),
                 keyboardType: TextInputType.number,
                 validator: (value) =>
-                value == null || value.isEmpty ? 'Year required' : null,
+                value == null || value.isEmpty ? loc.translate('year_required')! : null,
               ),
               TextFormField(
                 controller: _lengthController,

@@ -94,6 +94,11 @@
 
   "save": "Save",
   "boat_added": "Boat added",
+  "boat_updated": "Boat updated",
+  "boat_deleted": "Boat deleted",
+  "boat_details": "Boat Details",
+  "delete_boat":"Delete boat",
+  "delete_boat_msg": "Are you sure you want to delete this boat listing?",
 
   "copy_previous_boat_title": "Copy previous boat?",
   "copy_previous_boat_message": "Do you want to start with the values from the last boat you added?",
@@ -105,7 +110,7 @@
 
   "offers_title": "Purchase Offers",
   "offers_button": "Purchase Offers",
-    "home_title": "Group Project Home",
+  "home_title": "Group Project Home",
   "new_offer": "New Offer",
   "save_offer": "Save Offer",
   "update_offer": "Update Offer",

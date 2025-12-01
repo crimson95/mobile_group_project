@@ -71,7 +71,7 @@ class _BoatDetailsPageState extends State<BoatDetailsPage> {
 
     if (!mounted) return;
     ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text('Boat updated')));
+        .showSnackBar(SnackBar(content: Text(loc.translate('boat_updated')!)));
 
     Navigator.pop(context);
   }
@@ -86,7 +86,7 @@ class _BoatDetailsPageState extends State<BoatDetailsPage> {
 
     if (!mounted) return;
     ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text('Boat deleted')));
+        .showSnackBar(SnackBar(content: Text(loc.translate('boat_deleted')!)));
 
     Navigator.pop(context);
   }
@@ -96,9 +96,9 @@ class _BoatDetailsPageState extends State<BoatDetailsPage> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text('Delete boat'),
+        title: Text(loc.translate('delete_boat')!),
         content:
-        Text('Are you sure you want to delete this boat listing?'),
+        Text(loc.translate('delete_boat_msg')!),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -120,7 +120,7 @@ class _BoatDetailsPageState extends State<BoatDetailsPage> {
   Widget build(BuildContext context) {
     late final loc = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: Text('Boat Details')),
+      appBar: AppBar(title: Text(loc.translate('boat_details')!)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -132,7 +132,7 @@ class _BoatDetailsPageState extends State<BoatDetailsPage> {
                 decoration: InputDecoration(labelText: loc.translate('year_built')!),
                 keyboardType: TextInputType.number,
                 validator: (value) =>
-                value == null || value.isEmpty ? 'Year required' : null,
+                value == null || value.isEmpty ? loc.translate('year_required')! : null,
               ),
               TextFormField(
                 controller: _lengthController,
@@ -141,14 +141,14 @@ class _BoatDetailsPageState extends State<BoatDetailsPage> {
                 keyboardType:
                 const TextInputType.numberWithOptions(decimal: true),
                 validator: (value) =>
-                value == null || value.isEmpty ? 'Length required' : null,
+                value == null || value.isEmpty ? loc.translate('length_required')! : null,
               ),
               TextFormField(
                 controller: _powerController,
                 decoration:
                 InputDecoration(labelText: loc.translate('power_type')!),
                 validator: (value) =>
-                value == null || value.isEmpty ? 'Power type required' : null,
+                value == null || value.isEmpty ? loc.translate('power_required')! : null,
               ),
               TextFormField(
                 controller: _priceController,
@@ -156,13 +156,13 @@ class _BoatDetailsPageState extends State<BoatDetailsPage> {
                 keyboardType:
                 const TextInputType.numberWithOptions(decimal: true),
                 validator: (value) =>
-                value == null || value.isEmpty ? 'Price required' : null,
+                value == null || value.isEmpty ? loc.translate('price_required')! : null,
               ),
               TextFormField(
                 controller: _addressController,
                 decoration: InputDecoration(labelText: loc.translate('address')!),
                 validator: (value) =>
-                value == null || value.isEmpty ? 'Address required' : null,
+                value == null || value.isEmpty ? loc.translate('address_required')! : null,
               ),
               const SizedBox(height: 24),
               ElevatedButton(

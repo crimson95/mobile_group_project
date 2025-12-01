@@ -38,7 +38,7 @@ class _BoatListPageState extends State<BoatListPage> {
     late final loc = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Boats for Sale'),
+        title: Text(loc.translate('Boats for sale')!),
       ),
       bottomNavigationBar: boats.isEmpty
           ? null
@@ -59,7 +59,7 @@ class _BoatListPageState extends State<BoatListPage> {
           },
           icon: const Icon(Icons.add),
           label: Text(
-            loc.translate("add_boat")!,
+            loc.translate('add_boat')!,
             style: TextStyle(fontSize: 18),
           ),
         ),

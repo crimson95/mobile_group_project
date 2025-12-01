@@ -94,6 +94,12 @@
 
   "save": "儲存",
   "boat_added": "成功新增船舶",
+  "boat_updated": "成功更新船舶",
+  "boat_deleted": "成功刪除船舶",
+
+  "boat_details": "船舶資訊",
+  "delete_boat":"刪除船舶",
+  "delete_boat_msg": "你確定要刪除該船舶？",
 
   "copy_previous_boat_title": "複製上一艘船？",
   "copy_previous_boat_message": "是否要使用上一艘新增的船舶資料作為起始值？",
