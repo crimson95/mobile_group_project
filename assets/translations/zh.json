@@ -44,5 +44,34 @@
   "Please select a customer from the list": "請從左側列表中選擇一位顧客。",
 
   "Delete customer": "刪除顧客",
-  "Are you sure you want to delete": "你確定要刪除"
+  "Are you sure you want to delete": "你確定要刪除",
+
+  "car_list_title": "出售中的汽车",
+  "last_saved_car": "最近保存的车辆",
+  "select_car_from_list": "请从列表中选择车辆",
+
+  "confirm_delete_title": "确认删除",
+  "confirm_delete_content": "确定要删除这辆车吗？",
+  "delete": "删除",
+  "cancel": "取消",
+
+  "new_car_title": "新增车辆",
+  "new_car_content": "请选择新增方式",
+  "copy_last": "复制上一辆",
+  "blank_form": "空白表单",
+
+  "car_editor_title": "编辑车辆",
+  "year": "年份",
+  "enter_year_hint": "输入年份（如 2020）",
+  "make": "品牌",
+  "enter_make_hint": "输入品牌（如 Toyota）",
+  "model": "型号",
+  "enter_model_hint": "输入型号（如 Corolla）",
+  "price": "价格",
+  "enter_price_hint": "输入价格（如 $20,000）",
+
+  "confirm_save_title": "确认保存",
+  "confirm_save_content": "是否保存该车辆？",
+  "please_fill_all_fields": "请填写所有字段。",
+  "save_car": "保存车辆"
 }

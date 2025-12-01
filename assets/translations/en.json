@@ -44,5 +44,34 @@
   "Please select a customer from the list": "Please select a customer from the list",
 
   "Delete customer": "Delete customer",
-  "Are you sure you want to delete": "Are you sure you want to delete"
+  "Are you sure you want to delete": "Are you sure you want to delete",
+
+  "car_list_title": "Cars for Sale",
+  "last_saved_car": "Last Saved Car",
+  "select_car_from_list": "Select a car from the list",
+
+  "confirm_delete_title": "Confirm Delete",
+  "confirm_delete_content": "Are you sure you want to delete this car?",
+  "delete": "Delete",
+  "cancel": "Cancel",
+
+  "new_car_title": "New car",
+  "new_car_content": "How do you want to start?",
+  "copy_last": "Copy last",
+  "blank_form": "Blank form",
+
+  "car_editor_title": "Car Editor",
+  "year": "Year",
+  "enter_year_hint": "Enter year (e.g. 2020)",
+  "make": "Make",
+  "enter_make_hint": "Enter make (e.g. Toyota)",
+  "model": "Model",
+  "enter_model_hint": "Enter model (e.g. Corolla)",
+  "price": "Price",
+  "enter_price_hint": "Enter price (e.g. $20,000)",
+
+  "confirm_save_title": "Confirm Save",
+  "confirm_save_content": "Do you want to save this car?",
+  "please_fill_all_fields": "Please fill in all fields.",
+  "save_car": "Save Car"
 }

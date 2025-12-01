@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'CustomerPage/dao/customerDatabase.dart';
 import 'CustomerPage/pages/CustomerPage.dart';
+import 'CarPage/pages/carlistpage.dart';
 import 'AppLocalizations.dart';
 
 /// Entry point of the application. Initializes the Floor database.
@@ -140,13 +141,16 @@ class MainMenu extends StatelessWidget {
                   children: [
                     ElevatedButton(
                         child: Text(loc.translate('Customer Page')!), onPressed: () {
-                      Navigator.push(context,
+                          Navigator.push(context,
                         MaterialPageRoute(
                           builder: (_) => CustomerPage(database: database),
                         ),);
                     }),
                     ElevatedButton(
-                        child: Text(loc.translate('Cars for sale')!), onPressed: () {}),
+                        child: Text(loc.translate('Cars for sale')!), onPressed: () {
+                          Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => const CarListPage()),
+                    );}),
                     ElevatedButton(
                         child: Text(loc.translate('Boats for sale')!), onPressed: () {}),
                     ElevatedButton(
@@ -171,7 +175,9 @@ class MainMenu extends StatelessWidget {
                   ),
                   ElevatedButton(
                     child: Text(loc.translate('Cars for sale')!),
-                    onPressed: () {},
+                    onPressed: () {Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => const CarListPage()),
+                    );},
                   ),
                   ElevatedButton(
                     child: Text(loc.translate('Boats for sale')!),
