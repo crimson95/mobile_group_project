@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../../dao/boatDatabase.dart';
 import '../../model/boat.dart';
+import 'package:final_group_project/localization/app_localizations.dart';
+
 
 class BoatAddPage extends StatefulWidget {
   const BoatAddPage({super.key});
@@ -28,12 +30,26 @@ class _BoatAddPageState extends State<BoatAddPage> {
   }
 
   Future<void> _loadLastBoat() async {
-    // read previous boat values (if any)
-    final year = await _encryptedPrefs.getString('boat_year').catchError((_) => null);
-    final length = await _encryptedPrefs.getString('boat_length').catchError((_) => null);
-    final power = await _encryptedPrefs.getString('boat_power').catchError((_) => null);
-    final price = await _encryptedPrefs.getString('boat_price').catchError((_) => null);
-    final address = await _encryptedPrefs.getString('boat_address').catchError((_) => null);
+    String? year;
+    String? length;
+    String? power;
+    String? price;
+    String? address;
+
+    try {
+      year = await _encryptedPrefs.getString('boat_year');
+      length = await _encryptedPrefs.getString('boat_length');
+      power = await _encryptedPrefs.getString('boat_power');
+      price = await _encryptedPrefs.getString('boat_price');
+      address = await _encryptedPrefs.getString('boat_address');
+    } catch (_) {
+      return;
+    }
+
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Boat added')),
+    );
 
     if (!mounted) return;
 
@@ -47,24 +63,27 @@ class _BoatAddPageState extends State<BoatAddPage> {
         showDialog(
           context: context,
           builder: (_) => AlertDialog(
-            title: const Text('Copy previous boat?'),
-            content: const Text(
-                'Do you want to start with the values from the last boat you added?'),
+            title: Text(AppLocalizations.of(context)!.translate('copy_previous_boat_title')!,
+            ),
+            content: Text(AppLocalizations.of(context)!.translate('copy_previous_boat_title')!,
+            ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('No'),
+                child: Text(AppLocalizations.of(context)!.translate('no')!,
+                ),
               ),
               TextButton(
                 onPressed: () {
-                  _yearController.text = year;
-                  _lengthController.text = length;
-                  _powerController.text = power;
-                  _priceController.text = price;
-                  _addressController.text = address;
+                  _yearController.text = year!;
+                  _lengthController.text = length!;
+                  _powerController.text = power!;
+                  _priceController.text = price!;
+                  _addressController.text = address!;
                   Navigator.pop(context);
                 },
-                child: const Text('Yes'),
+                child: Text(AppLocalizations.of(context)!.translate('yes')!,
+                ),
               ),
             ],
           ),
@@ -99,7 +118,7 @@ class _BoatAddPageState extends State<BoatAddPage> {
     if (!mounted) return;
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Boat added')),
+      SnackBar(content: Text(AppLocalizations.of(context)!.translate('boat_added')!,),),
     );
 
     Navigator.pop(context); // go back to list
@@ -118,7 +137,8 @@ class _BoatAddPageState extends State<BoatAddPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Add boat')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.translate('add_boat')!,),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -127,45 +147,51 @@ class _BoatAddPageState extends State<BoatAddPage> {
             children: [
               TextFormField(
                 controller: _yearController,
-                decoration: const InputDecoration(labelText: 'Year built'),
+                decoration: InputDecoration( labelText: AppLocalizations.of(context)!.translate('year_built')!,
+                ),
                 keyboardType: TextInputType.number,
                 validator: (value) =>
-                value == null || value.isEmpty ? 'Year required' : null,
+                value == null || value.isEmpty ? AppLocalizations.of(context)!.translate('year_required')! : null,
               ),
               TextFormField(
                 controller: _lengthController,
                 decoration:
-                const InputDecoration(labelText: 'Length (meters)'),
+                InputDecoration(labelText: AppLocalizations.of(context)!.translate('length_meters')!,
+                ),
                 keyboardType:
                 const TextInputType.numberWithOptions(decimal: true),
                 validator: (value) =>
-                value == null || value.isEmpty ? 'Length required' : null,
+                value == null || value.isEmpty ? AppLocalizations.of(context)!.translate('length_required')! : null,
               ),
               TextFormField(
                 controller: _powerController,
                 decoration:
-                const InputDecoration(labelText: 'Power type (Sail/Motor)'),
+                InputDecoration(labelText: AppLocalizations.of(context)!.translate('power_type')!,
+                ),
                 validator: (value) =>
-                value == null || value.isEmpty ? 'Power type required' : null,
+                value == null || value.isEmpty ? AppLocalizations.of(context)!.translate('power_required')! : null,
               ),
               TextFormField(
                 controller: _priceController,
-                decoration: const InputDecoration(labelText: 'Price'),
+                decoration: InputDecoration(labelText: AppLocalizations.of(context)!.translate('price')!,
+                ),
                 keyboardType:
                 const TextInputType.numberWithOptions(decimal: true),
                 validator: (value) =>
-                value == null || value.isEmpty ? 'Price required' : null,
+                value == null || value.isEmpty ? AppLocalizations.of(context)!.translate('price_required')! : null,
               ),
               TextFormField(
                 controller: _addressController,
-                decoration: const InputDecoration(labelText: 'Address'),
+                decoration: InputDecoration(labelText: AppLocalizations.of(context)!.translate('address')!,
+                ),
                 validator: (value) =>
-                value == null || value.isEmpty ? 'Address required' : null,
+                value == null || value.isEmpty ?  AppLocalizations.of(context)!.translate('address_required')! : null,
               ),
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: _saveBoat,
-                child: const Text('Save'),
+                child: Text(AppLocalizations.of(context)!.translate('save')!,
+                ),
               ),
             ],
           ),

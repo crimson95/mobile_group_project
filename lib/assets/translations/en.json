@@ -1,0 +1,33 @@
+{
+  "add_boat": "Add boat",
+  "boats_for_sale": "Boats for sale",
+  "no_boats_yet": "No boats yet",
+  "add_boat_button": "Add Boat",
+  "add_first_boat_button": "Add Your First Boat",
+
+  "year_built": "Year built",
+  "length_meters": "Length (meters)",
+  "power_type": "Power type (Sail/Motor)",
+  "price": "Price",
+  "address": "Address",
+
+  "year_required": "Year required",
+  "length_required": "Length required",
+  "power_required": "Power type required",
+  "price_required": "Price required",
+  "address_required": "Address required",
+
+  "save": "Save",
+  "boat_added": "Boat added",
+
+  "copy_previous_boat_title": "Copy previous boat?",
+  "copy_previous_boat_message": "Do you want to start with the values from the last boat you added?",
+  "yes": "Yes",
+  "no": "No",
+
+  "instructions_title": "How to use this screen",
+  "instructions_message": "Use the Add button to create a new boat listing. Tap an existing boat to view and edit its details. Long-press or use buttons on the details page to update or delete.",
+
+  "language_en": "English",
+  "language_fil": "Filipino"
+}

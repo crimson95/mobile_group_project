@@ -1,0 +1,33 @@
+{
+  "add_boat": "Magdagdag ng bangka",
+  "boats_for_sale": "Mga bangka na binebenta",
+  "no_boats_yet": "Wala pang bangka sa listahan",
+  "add_boat_button": "Magdagdag ng Bangka",
+  "add_first_boat_button": "Magdagdag ng Unang Bangka",
+
+  "year_built": "Taon ginawa",
+  "length_meters": "Haba (metro)",
+  "power_type": "Uri ng makina (Layag/Motor)",
+  "price": "Presyo",
+  "address": "Address",
+
+  "year_required": "Kailangang ilagay ang taon",
+  "length_required": "Kailangang ilagay ang haba",
+  "power_required": "Kailangang ilagay ang uri ng makina",
+  "price_required": "Kailangang ilagay ang presyo",
+  "address_required": "Kailangang ilagay ang address",
+
+  "save": "I-save",
+  "boat_added": "Naidagdag ang bangka",
+
+  "copy_previous_boat_title": "Kopyahin ang huling bangka?",
+  "copy_previous_boat_message": "Gusto mo bang gamitin ang mga detalye ng huling bangka na in-enter mo?",
+  "yes": "Oo",
+  "no": "Hindi",
+
+  "instructions_title": "Paano gamitin ang screen na ito",
+  "instructions_message": "Gamitin ang Add para gumawa ng bagong bangka. I-tap ang bangka sa listahan para makita at i-edit ang detalye. Gumamit ng mga button sa details page para mag-update o mag-delete.",
+
+  "language_en": "Ingles",
+  "language_fil": "Filipino"
+}

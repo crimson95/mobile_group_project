@@ -3,6 +3,9 @@ import '../../model/boat.dart';
 import '../../dao/boatDatabase.dart';
 import 'boat_add_page.dart';
 import 'boat_details_page.dart';
+import 'package:final_group_project/localization/app_localizations.dart';
+
+
 
 class BoatListPage extends StatefulWidget {
   const BoatListPage({super.key});
