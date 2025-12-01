@@ -1,4 +1,4 @@
-# final_group_project
+# mobile_group_project
 
 A new Flutter project.
 
