@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'offer.dart';
+import '../../AppLocalizations.dart';
 
 ///  OfferDetailTablet
 ///  This widget shows the details of a selected offer when the application
@@ -19,6 +20,7 @@ class OfferDetailTablet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Card(
       elevation: 3,
       margin: const EdgeInsets.all(20),
@@ -41,7 +43,7 @@ class OfferDetailTablet extends StatelessWidget {
 
             // Customer ID
             _detailRow(
-              label: "Customer ID",
+              label: loc.translate('customer_id')!,
               value: offer.customerId,
             ),
 
@@ -49,7 +51,7 @@ class OfferDetailTablet extends StatelessWidget {
 
             // Boat or Car ID
             _detailRow(
-              label: "Boat/Car ID",
+              label: loc.translate('item_id')!,
               value: offer.itemId,
             ),
 
@@ -57,7 +59,7 @@ class OfferDetailTablet extends StatelessWidget {
 
             // Price Offered
             _detailRow(
-              label: "Price Offered",
+              label: loc.translate('price_offered')!,
               value: "\$${offer.price.toStringAsFixed(2)}",
             ),
 
@@ -65,7 +67,7 @@ class OfferDetailTablet extends StatelessWidget {
 
             // Date of Offer
             _detailRow(
-              label: "Date of Offer",
+              label: loc.translate('date_of_offer')!,
               value: offer.date,
             ),
 
@@ -73,7 +75,7 @@ class OfferDetailTablet extends StatelessWidget {
 
             // Accepted Switch-style label (text only)
             _detailRow(
-              label: "Accepted?",
+              label: loc.translate('accepted')!,
               value: offer.accepted ? "Yes" : "No",
             ),
 
@@ -87,9 +89,7 @@ class OfferDetailTablet extends StatelessWidget {
 
             // Informational note (helps with UX + assignment marks)
             Text(
-              "This panel shows the details of the selected offer.\n"
-                  "On tablet screens, the list appears on the left and this "
-                  "detail view appears on the right.",
+              loc.translate('offers_help_body')!,
               style: TextStyle(
                 color: Colors.grey[600],
                 fontSize: 13,

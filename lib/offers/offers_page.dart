@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'offer.dart';
 import 'offer_dao.dart';
 import 'offer_form_page.dart';
+import '../../AppLocalizations.dart';
+
 /// This screen displays all purchase offers currently stored in the database.
 /// It acts as the “list page” required by the assignment:
 /// - Shows items from the database
@@ -37,10 +39,11 @@ class _OffersPageState extends State<OffersPage> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Scaffold(
       // Top bar of the screen — required “ActionBar”.
       appBar: AppBar(                    // ACTION BAR HERE
-        title: const Text("Purchase Offers"),
+        title: Text(loc.translate('offers_title')!),
       ),
       // Floating button >> opens the form page to add a new offer.
       floatingActionButton: FloatingActionButton(
@@ -63,7 +66,7 @@ class _OffersPageState extends State<OffersPage> {
           return ListTile(
             // Display the offer summary so the user gets quick information.
           title: Text("Offer: \$${offer.price.toStringAsFixed(2)}"),
-            subtitle: Text("Customer ID: ${offer.customerId}"),
+            subtitle: Text("${loc.translate('customer_id')!}: ${offer.customerId}"),
             // When tapped >> open the same form, but with existing data
             // so the user can update or delete it.
             onTap: () async {

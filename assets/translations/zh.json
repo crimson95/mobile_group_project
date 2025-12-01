@@ -1,6 +1,6 @@
 {
   "EN": "英",
-  "TW": "中",
+  "ZH": "中",
   "Main Menu": "主選單",
   "Customer Page": "顧客頁面",
   "Cars for sale": "汽車銷售",
@@ -73,5 +73,34 @@
   "confirm_save_title": "确认保存",
   "confirm_save_content": "是否保存该车辆？",
   "please_fill_all_fields": "请填写所有字段。",
-  "save_car": "保存车辆"
+  "save_car": "保存车辆",
+
+  "add_boat": "新增船舶",
+  "no_boats_yet": "目前沒有船舶資料",
+  "add_boat_button": "新增船舶",
+  "add_first_boat_button": "新增第一艘船",
+
+  "year_built": "建造年份",
+  "length_meters": "船長（公尺）",
+  "power_type": "動力類型（帆船/機動）",
+  "price": "價格",
+  "address": "地址",
+
+  "year_required": "請輸入建造年份",
+  "length_required": "請輸入船長",
+  "power_required": "請選擇動力類型",
+  "price_required": "請輸入價格",
+  "address_required": "請輸入地址",
+
+  "save": "儲存",
+  "boat_added": "成功新增船舶",
+
+  "copy_previous_boat_title": "複製上一艘船？",
+  "copy_previous_boat_message": "是否要使用上一艘新增的船舶資料作為起始值？",
+  "yes": "是",
+  "no": "否",
+
+  "instructions_title": "使用說明",
+  "instructions_message": "使用「新增」按鈕來建立新的船舶資料。點擊列表中的船舶可查看或編輯詳細資訊。長按或於詳細頁面中可進行更新或刪除。"
 }
+

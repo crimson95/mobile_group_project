@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'boats/pages/boat_list_page.dart';
 import 'CustomerPage/dao/customerDatabase.dart';
 import 'CustomerPage/pages/CustomerPage.dart';
 import 'CarPage/pages/carlistpage.dart';
+import 'offers/offers_page.dart';
 import 'AppLocalizations.dart';
 
 /// Entry point of the application. Initializes the Floor database.
@@ -54,7 +56,9 @@ class MyAppState extends State<MyApp>{
     return MaterialApp(
       supportedLocales: const [
         Locale('en','CA'),
-        Locale('zh','TW'),
+        Locale('zh'),
+        Locale('ar'),
+        Locale('fr'),
       ],
       localizationsDelegates: const [
         AppLocalizations.delegate,
@@ -107,8 +111,16 @@ class MainMenu extends StatelessWidget {
             child: Text(loc.translate('EN')!),
           ),
           DropdownMenuItem(
-            value: Locale('zh', 'TW'),
-            child: Text(loc.translate('TW')!),
+            value: Locale('zh'),
+            child: Text(loc.translate('ZH')!),
+          ),
+          DropdownMenuItem(
+            value: Locale('ar'),
+            child: Text('AR'),
+          ),
+          DropdownMenuItem(
+            value: Locale('fr'),
+            child: Text('FR'),
           ),
         ],
       ),
@@ -154,7 +166,12 @@ class MainMenu extends StatelessWidget {
                     ElevatedButton(
                         child: Text(loc.translate('Boats for sale')!), onPressed: () {}),
                     ElevatedButton(
-                        child: Text(loc.translate('Purchase offers')!), onPressed: () {}),
+                        child: Text(loc.translate('Purchase offers')!), onPressed: () {
+                          Navigator.push(context,
+                      MaterialPageRoute(
+                        builder: (_) => const OffersPage(),
+                      ),
+                    );}),
                   ],
                 );
               }
@@ -175,17 +192,25 @@ class MainMenu extends StatelessWidget {
                   ),
                   ElevatedButton(
                     child: Text(loc.translate('Cars for sale')!),
-                    onPressed: () {Navigator.push(context,
+                    onPressed: () {
+                      Navigator.push(context,
                       MaterialPageRoute(builder: (_) => const CarListPage()),
                     );},
                   ),
                   ElevatedButton(
                     child: Text(loc.translate('Boats for sale')!),
-                    onPressed: () {},
+                    onPressed: () {Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => const BoatListPage()),
+                    );},
                   ),
                   ElevatedButton(
                     child: Text(loc.translate('Purchase offers')!),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context,
+                      MaterialPageRoute(
+                        builder: (_) => const OffersPage(),
+                      ),
+                    );},
                   ),
                 ],
               );

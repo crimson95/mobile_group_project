@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'offer.dart';
 import 'offer_dao.dart';
 import 'shared_prefs_service.dart';
+import '../../AppLocalizations.dart';
 /// Screen for creating a new purchase offer or editing an existing one.
 ///
 /// If [offer] is null, the page behaves in "create" mode.
@@ -54,23 +55,22 @@ class _OfferFormPageState extends State<OfferFormPage> {
   Future<void> _loadLastOffer() async {
     final last = await SharedPrefsService.loadLastOffer();
     if (last == null) return;
-
+    final loc = AppLocalizations.of(context)!;
     final copy = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Copy previous offer?'),
-        content: const Text(
-          'Do you want to copy the fields from the last created offer, '
-              'or start with an empty form?',
+        title: Text(loc.translate('copyprev_title')!),
+        content: Text(loc.translate('copyprev_msg')!
+          ,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Blank'),
+            child: Text(loc.translate('blank')!),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Copy'),
+            child: Text(loc.translate('copy')!),
           ),
         ],
       ),
@@ -123,7 +123,7 @@ class _OfferFormPageState extends State<OfferFormPage> {
     if (!_formKey.currentState!.validate()) return;
 
     final price = double.parse(_priceCtrl.text.trim());
-
+    final loc = AppLocalizations.of(context)!;
     final offer = Offer(
       id: widget.offer?.id,
       customerId: _customerIdCtrl.text.trim(),
@@ -137,14 +137,14 @@ class _OfferFormPageState extends State<OfferFormPage> {
       // Update existing row in the database
       await OfferDao.instance.updateOffer(offer);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Offer updated')),
+        SnackBar(content: Text(loc.translate('offer_updated')!)),
       );
     } else {
       // Insert new row and save it as the "last offer" for the copy feature.
       final id = await OfferDao.instance.insertOffer(offer);
       await SharedPrefsService.saveLastOffer(offer.copyWith(id: id));
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Offer added')),
+        SnackBar(content: Text(loc.translate('offer_added')!)),
       );
     }
 
@@ -158,20 +158,21 @@ class _OfferFormPageState extends State<OfferFormPage> {
   /// This is only available in edit mode. After deletion, a Snackbar
   /// confirms the action and the screen closes.
   Future<void> _delete() async {
+    final loc = AppLocalizations.of(context)!;
     if (!_isEdit) return;
     final confirm = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Delete offer?'),
-        content: const Text('Are you sure you want to delete this offer?'),
+        title: Text(loc.translate('delete_offer')!),
+        content: Text(loc.translate('delete_offer_msg')!),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(loc.translate('cancel')!),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete'),
+            child: Text(loc.translate('delete')!),
           ),
         ],
       ),
@@ -180,7 +181,7 @@ class _OfferFormPageState extends State<OfferFormPage> {
     if (confirm == true) {
       await OfferDao.instance.deleteOffer(widget.offer!.id!);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Offer deleted')),
+        SnackBar(content: Text(loc.translate('offer_deleted')!)),
       );
       await Future.delayed(const Duration(milliseconds: 400));
       if (mounted) {
@@ -193,16 +194,13 @@ class _OfferFormPageState extends State<OfferFormPage> {
   /// This satisfies the requirement that each activity must have
   /// an ActionBar item that shows usage instructions.
   void _showInstructions() {
+    final loc = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text("How to Use This Page"),
-        content: const Text(
-          "• Fill all fields to create a new offer.\n"
-              "• Tap the calendar icon to choose a date.\n"
-              "• Use the switch to mark the offer as accepted.\n"
-              "• In edit mode, tap the trash icon to delete.\n"
-              "• The last created offer can be copied automatically.",
+        title: Text(loc.translate('form_help_title')!),
+        content: Text(
+          loc.translate('form_help_body')!
         ),
         actions: [
           TextButton(
@@ -216,10 +214,11 @@ class _OfferFormPageState extends State<OfferFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Scaffold(
       // The AppBar title changes depending on whether we are adding or editing.
       appBar: AppBar(
-        title: Text(_isEdit ? 'Edit Offer' : 'New Offer'),
+        title: Text(_isEdit ? 'Edit Offer' : loc.translate('new_offer')!),
         // Info icon >> shows instructions dialog.
         actions: [
           IconButton(
@@ -243,7 +242,7 @@ class _OfferFormPageState extends State<OfferFormPage> {
               // Customer ID field
               TextFormField(
                 controller: _customerIdCtrl,
-                decoration: const InputDecoration(labelText: 'Customer ID'),
+                decoration: InputDecoration(labelText: loc.translate('customer_id')!),
                 validator: (v) =>
                 v == null || v.trim().isEmpty ? 'Required' : null,
               ),
@@ -251,7 +250,7 @@ class _OfferFormPageState extends State<OfferFormPage> {
               TextFormField(
                 controller: _itemIdCtrl,
                 decoration:
-                const InputDecoration(labelText: 'Boat or Car ID'),
+                InputDecoration(labelText: loc.translate('item_id')!),
                 validator: (v) =>
                 v == null || v.trim().isEmpty ? 'Required' : null,
               ),
@@ -259,7 +258,7 @@ class _OfferFormPageState extends State<OfferFormPage> {
                 // Price field (numeric only)
                 controller: _priceCtrl,
                 decoration:
-                const InputDecoration(labelText: 'Price offered'),
+                InputDecoration(labelText: loc.translate('price_offered')!),
                 keyboardType:
                 const TextInputType.numberWithOptions(decimal: true),
                 validator: (v) {
@@ -274,7 +273,7 @@ class _OfferFormPageState extends State<OfferFormPage> {
                 controller: _dateCtrl,
                 readOnly: true,
                 decoration: InputDecoration(
-                  labelText: 'Date of offer',
+                  labelText: loc.translate('date_of_offer')!,
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.calendar_today_outlined),
                     onPressed: _pickDate,
@@ -287,7 +286,7 @@ class _OfferFormPageState extends State<OfferFormPage> {
               // Accepted switch row
               Row(
                 children: [
-                  const Text('Accepted?'),
+                  Text(loc.translate('accepted')!),
                   const SizedBox(width: 8),
                   Switch(
                     value: _accepted,
@@ -299,7 +298,7 @@ class _OfferFormPageState extends State<OfferFormPage> {
               // Primary action button > save or update
               ElevatedButton(
                 onPressed: _save,
-                child: Text(_isEdit ? 'Update Offer' : 'Save Offer'),
+                child: Text(_isEdit ? loc.translate('update_offer')! : loc.translate('save_offer')!),
               ),
             ],
           ),
