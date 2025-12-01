@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'dao/customerDatabase.dart';
-import 'pages/CustomerPage.dart';
+import 'CustomerPage/dao/customerDatabase.dart';
+import 'CustomerPage/pages/CustomerPage.dart';
 import 'AppLocalizations.dart';
 
 /// Entry point of the application. Initializes the Floor database.
@@ -150,7 +150,7 @@ class MainMenu extends StatelessWidget {
                     ElevatedButton(
                         child: Text(loc.translate('Boats for sale')!), onPressed: () {}),
                     ElevatedButton(
-                        child: Text(loc.translate('Purchase offer')!), onPressed: () {}),
+                        child: Text(loc.translate('Purchase offers')!), onPressed: () {}),
                   ],
                 );
               }
@@ -178,7 +178,7 @@ class MainMenu extends StatelessWidget {
                     onPressed: () {},
                   ),
                   ElevatedButton(
-                    child: Text(loc.translate('Purchase offer')!),
+                    child: Text(loc.translate('Purchase offers')!),
                     onPressed: () {},
                   ),
                 ],

@@ -1,7 +1,7 @@
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:final_group_project/CustomerPage/dao/customerDatabase.dart';
 import 'package:flutter/material.dart';
-import '../AppLocalizations.dart';
+import '../../AppLocalizations.dart';
 import '../dao/customerDAO.dart';
 import '../model/customer.dart';
 
