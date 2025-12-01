@@ -1,10 +1,14 @@
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:final_group_project/CustomerPage/dao/customerDatabase.dart';
 import 'package:flutter/material.dart';
+import '../AppLocalizations.dart';
 import '../dao/customerDAO.dart';
 import '../model/customer.dart';
 
+/// Page that displays, inserts, updates and deletes customer records.
+/// Supports both mobile and desktop responsive layouts.
 class CustomerPage extends StatefulWidget {
+  /// Reference to the shared Floor database.
   final CustomerDatabase database;
   const CustomerPage({super.key, required this.database});
 
@@ -12,18 +16,38 @@ class CustomerPage extends StatefulWidget {
   State<CustomerPage> createState() => _CustomerPageState();
 }
 
+/// State class for [CustomerPage].
+///
+/// This class manages:
+/// - Loading all customers from the database
+/// - Handling user interactions for Add / Edit / Delete
+/// - Managing text controllers for the input fields
+/// - Supporting responsive layout (mobile ↔ desktop)
+/// - Tracking the currently selected or edited customer
+/// - Triggering UI updates using `setState()`
+///
+/// It acts as the main controller for all CRUD logic and user input behavior.
 class _CustomerPageState extends State<CustomerPage> {
+  /// List of all customers loaded from the database.
   List<Customer> list1 = [];
+  /// The customer currently selected in the list (null when none selected).
   Customer? selectedCustomer;
-  bool isEditing = false; // controls whether Add or Update
+  /// ID of the customer currently being edited (mobile mode support).
+  int? editingCustomerId;
+  /// True when editing an existing customer instead of inserting a new one.
+  bool isEditing = false;
 
+  /// Controllers for each input field.
   late TextEditingController _controller_firstName;
   late TextEditingController _controller_lastName;
   late TextEditingController _controller_address;
   late TextEditingController _controller_bday;
   late TextEditingController _controller_licenseNum;
+
+  /// DAO instance for database operations.
   late CustomerDAO customerDAO;
 
+  /// Initializes controllers and loads customers from the database.
   @override
   void initState() {
     super.initState();
@@ -42,6 +66,7 @@ class _CustomerPageState extends State<CustomerPage> {
     });
   }
 
+  /// Releases controller resources.
   @override
   void dispose() {
     //free memory:
@@ -53,6 +78,7 @@ class _CustomerPageState extends State<CustomerPage> {
     super.dispose();
   }
 
+  /// Clears all input text fields.
   void _clearInput(){
     // clear TextFields
     _controller_firstName.clear();
@@ -62,7 +88,34 @@ class _CustomerPageState extends State<CustomerPage> {
     _controller_licenseNum.clear();
   }
 
+  /// Inserts a new customer into the database after validating input.
   void _addCustomer() async{
+    late final loc = AppLocalizations.of(context)!;
+    // check if variable is null
+    if (_controller_firstName.text.trim().isEmpty ||
+        _controller_lastName.text.trim().isEmpty ||
+        _controller_address.text.trim().isEmpty ||
+        _controller_bday.text.trim().isEmpty ||
+        _controller_licenseNum.text.trim().isEmpty) {
+
+      // show AlertDialog if variable is null
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text(loc.translate('Missing Information')!),
+          content: Text(loc.translate('Please fill in all fields before adding a customer.')!),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(loc.translate('OK')!),
+            ),
+          ],
+        ),
+      );
+
+      return; // stop add
+    }
+
     // create a non-ID object (id = null)
     Customer newCustomer = Customer(
         firstName: _controller_firstName.text,
@@ -92,7 +145,7 @@ class _CustomerPageState extends State<CustomerPage> {
 
     // snackbar
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Customer added successfully.")),
+      SnackBar(content: Text(loc.translate('Customer added successfully.')!)),
     );
 
     await _saveLastInput();
@@ -100,36 +153,85 @@ class _CustomerPageState extends State<CustomerPage> {
     _clearInput();
   }
 
+  /// Updates an existing customer.
+  /// Includes mobile-mode support, and checks whether the user made changes.
   void _updateCustomer() async {
-    if (selectedCustomer == null) return;
+    late final loc = AppLocalizations.of(context)!;
+
+    final int? editingId = editingCustomerId;
+    if (editingId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(loc.translate('No customer selected to update.')!)),
+      );
+      return;
+    }
+
+    final Customer original = list1.firstWhere(
+          (c) => c.id == editingId,
+      orElse: () => Customer(
+        id: editingId,
+        firstName: "",
+        lastName: "",
+        address: "",
+        bday: "",
+        licenseNum: "",
+      ),
+    );
+
+    String newFirst = _controller_firstName.text.trim();
+    String newLast = _controller_lastName.text.trim();
+    String newAddress = _controller_address.text.trim();
+    String newBday = _controller_bday.text.trim();
+    String newLicense = _controller_licenseNum.text.trim();
+
+    bool noChanges =
+        newFirst == original.firstName &&
+            newLast == original.lastName &&
+            newAddress == original.address &&
+            newBday == original.bday &&
+            newLicense == original.licenseNum;
+
+    if (noChanges) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(loc.translate("No changes detected.")!)),
+      );
+      return;
+    }
 
     Customer updated = Customer(
-      id: selectedCustomer!.id,
-      firstName: _controller_firstName.text,
-      lastName: _controller_lastName.text,
-      address: _controller_address.text,
-      bday: _controller_bday.text,
-      licenseNum: _controller_licenseNum.text,
+      id: editingId,
+      firstName: newFirst,
+      lastName: newLast,
+      address: newAddress,
+      bday: newBday,
+      licenseNum: newLicense,
     );
 
     await customerDAO.updateCustomer(updated);
 
-    // update list
+    // refresh list
     List<Customer> refreshed = await customerDAO.getAllCustomers();
 
     setState(() {
       list1 = refreshed;
+
+      selectedCustomer = refreshed.firstWhere(
+            (c) => c.id == updated.id,
+        orElse: () => updated,
+      );
+
       isEditing = false;
-      selectedCustomer = updated; //back to left side
+      editingCustomerId = null;
     });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Customer updated!")),
-    );
-
     _clearInput();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(loc.translate('Customer updated.')!)),
+    );
   }
 
+  /// Saves the last input values using EncryptedSharedPreferences.
   Future<void> _saveLastInput() async{
     EncryptedSharedPreferences prefs = EncryptedSharedPreferences();
     await prefs.setString("firstName", _controller_firstName.text);
@@ -139,7 +241,9 @@ class _CustomerPageState extends State<CustomerPage> {
     await prefs.setString("licenseNum", _controller_licenseNum.text);
   }
 
+  /// Restores the last saved input values from EncryptedSharedPreferences.
   void _copyLastInput() async{
+    late final loc = AppLocalizations.of(context)!;
     EncryptedSharedPreferences prefs = EncryptedSharedPreferences();
     _controller_firstName.text = await prefs.getString("firstName") ?? "";
     _controller_lastName.text = await prefs.getString("lastName") ?? "";
@@ -148,22 +252,45 @@ class _CustomerPageState extends State<CustomerPage> {
     _controller_licenseNum.text = await prefs.getString("licenseNum") ?? "";
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Last input restored.")),
+      SnackBar(content: Text(loc.translate('Last input restored.')!)),
     );
   }
 
-  void _showHelpDialog(){
-
+  /// Displays a help dialog explaining how to use the page.
+  void _showHelpDialog() {
+    late final loc = AppLocalizations.of(context)!;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(loc.translate('How to use this page')!),
+        content: Text(
+          "${loc.translate('help_use_fields')!}\n"
+          "${loc.translate('help_press_add')!}\n"
+          "${loc.translate('help_tap_customer')!}\n"
+          "${loc.translate('help_press_edit')!}\n"
+          "${loc.translate('help_press_delete')!}\n"
+          "${loc.translate('help_copy_last_input')!}",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(loc.translate('OK')!),
+          ),
+        ],
+      ),
+    );
   }
+
 
   @override
   Widget build(BuildContext context) {
+    late final loc = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-          title: const Text('Customer Page'),
+          title: Text(loc.translate('Customer Page')!),
         actions: [
           IconButton(onPressed: _showHelpDialog, icon: const Icon(Icons.help_outline),
-          tooltip: 'Help',
+          tooltip: loc.translate('Help')!
           ),
         ],
       ),
@@ -171,6 +298,7 @@ class _CustomerPageState extends State<CustomerPage> {
     );
   }
 
+  /// Determines whether the page should show list+details or single-page layout.
   Widget reactiveLayout(){
     var size = MediaQuery.of(context).size;
     var height = size.height;
@@ -190,6 +318,7 @@ class _CustomerPageState extends State<CustomerPage> {
     }
   }
 
+  /// Returns the appropriate form layout depending on screen width.
   Widget buildForm() {
     return LayoutBuilder(
         builder: (context, constraints) {
@@ -208,7 +337,9 @@ class _CustomerPageState extends State<CustomerPage> {
     );
   }
 
+  /// Vertical form used in mobile portrait mode.
   Widget _buildVerticalForm(){
+    late final loc = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Column(
@@ -216,8 +347,8 @@ class _CustomerPageState extends State<CustomerPage> {
         children: [
           TextField(
             controller: _controller_firstName,
-            decoration: const InputDecoration(
-              labelText: "First Name",
+            decoration: InputDecoration(
+              labelText: loc.translate('First Name')!,
               border: OutlineInputBorder(),
             ),
           ),
@@ -225,8 +356,8 @@ class _CustomerPageState extends State<CustomerPage> {
 
           TextField(
             controller: _controller_lastName,
-            decoration: const InputDecoration(
-              labelText: "Last Name",
+            decoration: InputDecoration(
+              labelText: loc.translate('Last Name')!,
               border: OutlineInputBorder(),
             ),
           ),
@@ -234,8 +365,8 @@ class _CustomerPageState extends State<CustomerPage> {
 
           TextField(
             controller: _controller_address,
-            decoration: const InputDecoration(
-              labelText: "Address",
+            decoration: InputDecoration(
+              labelText: loc.translate('Address')!,
               border: OutlineInputBorder(),
             ),
           ),
@@ -243,8 +374,8 @@ class _CustomerPageState extends State<CustomerPage> {
 
           TextField(
             controller: _controller_bday,
-            decoration: const InputDecoration(
-              labelText: "Birthday",
+            decoration: InputDecoration(
+              labelText: loc.translate('Birthday')!,
               border: OutlineInputBorder(),
             ),
           ),
@@ -252,8 +383,8 @@ class _CustomerPageState extends State<CustomerPage> {
 
           TextField(
             controller: _controller_licenseNum,
-            decoration: const InputDecoration(
-              labelText: "License Number",
+            decoration: InputDecoration(
+              labelText: loc.translate('License Number')!,
               border: OutlineInputBorder(),
             ),
           ),
@@ -264,10 +395,10 @@ class _CustomerPageState extends State<CustomerPage> {
             children: [
               ElevatedButton(
                 onPressed: isEditing ? _updateCustomer : _addCustomer,
-                child: Text(isEditing ? "Update" : "Add"),
+                child: Text(isEditing ? loc.translate('Update')! : loc.translate('Add')!),
               ),
               ElevatedButton(
-                child: const Text("Copy Last Input"),
+                child: Text(loc.translate('Copy Last Input')!),
                 onPressed: _copyLastInput,
               ),
             ],
@@ -277,15 +408,17 @@ class _CustomerPageState extends State<CustomerPage> {
     );
   }
 
+  /// Horizontal form used in desktop / wide mode.
   Widget _buildHorizontalForm(){
+    late final loc = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Row(
         children: [
           Expanded(child: TextField(
             controller: _controller_firstName,
-            decoration: const InputDecoration(
-              labelText: "First Name",
+            decoration: InputDecoration(
+              labelText: loc.translate('First Name')!,
               border: OutlineInputBorder(),
             ),
           )),
@@ -293,8 +426,8 @@ class _CustomerPageState extends State<CustomerPage> {
 
           Expanded(child: TextField(
             controller: _controller_lastName,
-            decoration: const InputDecoration(
-              labelText: "Last Name",
+            decoration: InputDecoration(
+              labelText: loc.translate('Last Name')!,
               border: OutlineInputBorder(),
             ),
           )),
@@ -302,8 +435,8 @@ class _CustomerPageState extends State<CustomerPage> {
 
           Expanded(child: TextField(
             controller: _controller_address,
-            decoration: const InputDecoration(
-              labelText: "Address",
+            decoration: InputDecoration(
+              labelText: loc.translate('Address')!,
               border: OutlineInputBorder(),
             ),
           )),
@@ -311,8 +444,8 @@ class _CustomerPageState extends State<CustomerPage> {
 
           Expanded(child: TextField(
             controller: _controller_bday,
-            decoration: const InputDecoration(
-              labelText: "Birthday",
+            decoration: InputDecoration(
+              labelText: loc.translate('Birthday')!,
               border: OutlineInputBorder(),
             ),
           )),
@@ -320,8 +453,8 @@ class _CustomerPageState extends State<CustomerPage> {
 
           Expanded(child: TextField(
             controller: _controller_licenseNum,
-            decoration: const InputDecoration(
-              labelText: "License Number",
+            decoration: InputDecoration(
+              labelText: loc.translate('License Number')!,
               border: OutlineInputBorder(),
             ),
           )),
@@ -329,12 +462,12 @@ class _CustomerPageState extends State<CustomerPage> {
 
           ElevatedButton(
             onPressed: isEditing ? _updateCustomer : _addCustomer,
-            child: Text(isEditing ? "Update" : "Add"),
+            child: Text(isEditing ? loc.translate('Update')! : loc.translate('Add')!),
           ),
           const SizedBox(width: 10),
 
           ElevatedButton(
-            child: const Text("Copy Last Input"),
+            child: Text(loc.translate('Copy Last Input')!),
             onPressed: _copyLastInput,
           ),
         ],
@@ -342,30 +475,33 @@ class _CustomerPageState extends State<CustomerPage> {
     );
   }
 
+  /// Displays the customer list and form.
   Widget ListPage() {
+    late final loc = AppLocalizations.of(context)!;
     return Column(
       children: [
         buildForm(),
         Expanded(
           child: (list1.isEmpty)
-              ? const Center(child: Text("There is no customer in list"))
+              ? Center(child: Text(loc.translate('There is no customer in list')!))
               : buildListView(),
         ),
       ],
     );
   }
 
+  /// Builds the ListView of all customers.
   Widget buildListView() {
+    late final loc = AppLocalizations.of(context)!;
     return ListView.builder(
-      key: UniqueKey(),
       itemCount: list1.length,
       itemBuilder: (context, index) {
         final c = list1[index];
         return ListTile(
           title: Text("${c.firstName} ${c.lastName}"),
-          subtitle: Text("Address: ${c.address}\n"
-                        "Birthday: ${c.bday}\n"
-                        "License Number: ${c.licenseNum}"),
+          subtitle: Text("${loc.translate('Address')!}: ${c.address}\n"
+              "${loc.translate('Birthday')!}: ${c.bday}\n"
+              "${loc.translate('License Number')!}: ${c.licenseNum}",),
           onTap: () {
             setState(() {
               selectedCustomer = c;
@@ -376,11 +512,13 @@ class _CustomerPageState extends State<CustomerPage> {
     );
   }
 
+  /// Shows the detailed information of the selected customer.
   Widget DetailsPage() {
+    late final loc = AppLocalizations.of(context)!;
     if (selectedCustomer == null) {
       return Center(
         child: Text(
-          "Please select a customer from the list",
+          loc.translate('Please select a customer from the list')!,
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 30),
         ),
@@ -394,41 +532,88 @@ class _CustomerPageState extends State<CustomerPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text("ID: ${selectedCustomer!.id}", style: TextStyle(fontSize: 28)),
-          Text("First Name: ${selectedCustomer!.firstName}",
-              style: TextStyle(fontSize: 28)),
-          Text("Last Name: ${selectedCustomer!.lastName}",
-              style: TextStyle(fontSize: 28)),
-          Text("Address: ${selectedCustomer!.address}",
-              style: TextStyle(fontSize: 28)),
-          Text("Birthday: ${selectedCustomer!.bday}",
-              style: TextStyle(fontSize: 28)),
-          Text("License Number: ${selectedCustomer!.licenseNum}",
-              style: TextStyle(fontSize: 28)),
+          Text(
+            "${loc.translate('First Name')!}: ${selectedCustomer!.firstName}",
+            style: const TextStyle(fontSize: 28),
+          ),
+          Text(
+            "${loc.translate('Last Name')!}: ${selectedCustomer!.lastName}",
+            style: const TextStyle(fontSize: 28),
+          ),
+          Text(
+            "${loc.translate('Address')!}: ${selectedCustomer!.address}",
+            style: const TextStyle(fontSize: 28),
+          ),
+          Text(
+            "${loc.translate('Birthday')!}: ${selectedCustomer!.bday}",
+            style: const TextStyle(fontSize: 28),
+          ),
+          Text(
+            "${loc.translate('License Number')!}: ${selectedCustomer!.licenseNum}",
+            style: const TextStyle(fontSize: 28),
+          ),
           SizedBox(height: 30),
 
           ElevatedButton(
             onPressed: () {
               setState(() {
+                editingCustomerId = selectedCustomer!.id;
                 _controller_firstName.text = selectedCustomer!.firstName;
                 _controller_lastName.text = selectedCustomer!.lastName;
                 _controller_address.text = selectedCustomer!.address;
                 _controller_bday.text = selectedCustomer!.bday;
                 _controller_licenseNum.text = selectedCustomer!.licenseNum;
                 isEditing = true;
+
+                // 手機模式需要切回 ListPage()
+                selectedCustomer = null;
               });
             },
-            child: Text("Edit"),
+            child: Text(loc.translate('Edit')!),
           ),
 
           ElevatedButton(
             onPressed: () async {
-              await customerDAO.deleteCustomer(selectedCustomer!);
-              setState(() {
-                list1.remove(selectedCustomer);
-                selectedCustomer = null;
-              });
+              if (selectedCustomer == null) return;
+
+              final bool? shouldDelete = await showDialog<bool>(
+                context: context,
+                builder: (context) =>
+                    AlertDialog(
+                      title: Text(loc.translate('Delete customer')!),
+                      content: Text(
+                          '${loc.translate('Are you sure you want to delete')} '
+                              '[${selectedCustomer!
+                              .firstName} ${selectedCustomer!.lastName}]?'
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: Text(loc.translate('Cancel')!),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(true),
+                          child: Text(loc.translate('Delete')!),
+                        ),
+                      ],
+                    ),
+              );
+
+              // if user press Cancel or close dialog, execute delete
+              if (shouldDelete == true) {
+                await customerDAO.deleteCustomer(selectedCustomer!);
+                setState(() {
+                  list1.remove(selectedCustomer);
+                  selectedCustomer = null;
+                });
+
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(loc.translate('Customer deleted.')!)),
+              );
+              }
             },
-            child: Text("Delete"),
+            child: Text(loc.translate('Delete')!),
           ),
 
           ElevatedButton(
@@ -437,7 +622,7 @@ class _CustomerPageState extends State<CustomerPage> {
                 selectedCustomer = null;
               });
             },
-            child: Text("Close"),
+            child: Text(loc.translate('Close')!),
           ),
         ],
       ),

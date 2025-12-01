@@ -1,0 +1,48 @@
+{
+  "EN": "EN",
+  "TW": "TW",
+  "Main Menu": "Main Menu",
+  "Customer Page": "Customer Page",
+  "Cars for sale": "Cars for sale",
+  "Boats for sale": "Boats for sale",
+  "Purchase offer": "Purchase offer",
+
+  "Missing Information": "Missing Information",
+  "Please fill in all fields before adding a customer.": "Please fill in all fields before adding a customer.",
+  "OK": "OK",
+
+  "Customer added successfully.": "Customer added successfully.",
+  "Customer updated.": "Customer updated.",
+  "Customer deleted.": "Customer deleted.",
+  "Last input restored.": "Last input restored.",
+  "No changes detected.": "No changes detected.",
+  "How to use this page": "How to use this page",
+  "Help": "Help",
+
+  "help_use_fields": "• Use the fields at the top to enter a new customer.",
+  "help_press_add": "• Press \"Add\" to insert the customer into the list and the database.",
+  "help_tap_customer": "• Tap a customer in the list to see the details on the right.",
+  "help_press_edit": "• Press \"Edit\" to load the selected customer into the form, modify, then press \"Update\".",
+  "help_press_delete": "• Press \"Delete\" to remove the customer from the list and database.",
+  "help_copy_last_input": "• \"Copy Last Input\" restores the fields from the previously created customer.",
+
+  "First Name": "First Name",
+  "Last Name": "Last Name",
+  "Address": "Address",
+  "Birthday": "Birthday",
+  "License Number": "License Number",
+
+  "Add": "Add",
+  "Update": "Update",
+  "Copy Last Input": "Copy Last Input",
+  "Edit": "Edit",
+  "Delete": "Delete",
+  "Close": "Close",
+  "Cancel": "Cancel",
+
+  "There is no customer in list": "There is no customer in list",
+  "Please select a customer from the list": "Please select a customer from the list",
+
+  "Delete customer": "Delete customer",
+  "Are you sure you want to delete": "Are you sure you want to delete"
+}
