@@ -1,0 +1,77 @@
+{
+  "EN": "英",
+  "TW": "中",
+  "Main Menu": "主選單",
+  "Customer Page": "顧客頁面",
+  "Cars for sale": "汽車銷售",
+  "Boats for sale": "船隻銷售",
+  "Purchase offers": "購買報價",
+
+  "Missing Information": "缺少資料",
+  "Please fill in all fields before adding a customer.": "新增顧客前，請先完整填寫所有欄位。",
+  "OK": "確認",
+
+  "Customer added successfully.": "顧客新增成功。",
+  "Customer updated.": "顧客資料已更新。",
+  "Customer deleted.": "顧客已刪除。",
+  "Last input restored.": "已套用上次輸入的資料。",
+  "No changes detected.": "資料無任何變化",
+  "How to use this page": "使用說明",
+  "Help": "說明",
+
+  "help_use_fields": "• 使用上方的文字欄位新增新的顧客。",
+  "help_press_add": "• 按下「新增」加入顧客至列表與資料庫。",
+  "help_tap_customer": "• 點擊列表中的顧客以查看右側詳細資料。",
+  "help_press_edit": "• 按下「編輯」載入顧客資料，修改後按「更新」。",
+  "help_press_delete": "• 按下「刪除」可將顧客從列表與資料庫移除。",
+  "help_copy_last_input": "• 「複製上次輸入」會恢復上一筆輸入資料。",
+
+  "First Name": "名字",
+  "Last Name": "姓氏",
+  "Address": "地址",
+  "Birthday": "生日",
+  "License Number": "駕照號碼",
+
+  "Add": "新增",
+  "Update": "更新",
+  "Copy Last Input": "複製上次輸入",
+  "Edit": "編輯",
+  "Delete": "刪除",
+  "Close": "關閉",
+  "Cancel": "取消",
+
+  "There is no customer in list": "目前列表中沒有任何顧客。",
+  "Please select a customer from the list": "請從左側列表中選擇一位顧客。",
+
+  "Delete customer": "刪除顧客",
+  "Are you sure you want to delete": "你確定要刪除",
+
+  "car_list_title": "出售中的汽车",
+  "last_saved_car": "最近保存的车辆",
+  "select_car_from_list": "请从列表中选择车辆",
+
+  "confirm_delete_title": "确认删除",
+  "confirm_delete_content": "确定要删除这辆车吗？",
+  "delete": "删除",
+  "cancel": "取消",
+
+  "new_car_title": "新增车辆",
+  "new_car_content": "请选择新增方式",
+  "copy_last": "复制上一辆",
+  "blank_form": "空白表单",
+
+  "car_editor_title": "编辑车辆",
+  "year": "年份",
+  "enter_year_hint": "输入年份（如 2020）",
+  "make": "品牌",
+  "enter_make_hint": "输入品牌（如 Toyota）",
+  "model": "型号",
+  "enter_model_hint": "输入型号（如 Corolla）",
+  "price": "价格",
+  "enter_price_hint": "输入价格（如 $20,000）",
+
+  "confirm_save_title": "确认保存",
+  "confirm_save_content": "是否保存该车辆？",
+  "please_fill_all_fields": "请填写所有字段。",
+  "save_car": "保存车辆"
+}
