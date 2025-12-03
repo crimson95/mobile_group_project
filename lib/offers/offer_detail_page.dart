@@ -97,9 +97,9 @@ class _OfferDetailPageState extends State<OfferDetailPage> {
             children: [
               Text('ID: ${_offer.id ?? '-'}',
                   style: const TextStyle(fontSize: 22)),
-              Text('${loc.translate('Customer ID')}: ${_offer.customerId}',
+              Text('${loc.translate('customer_id')}: ${_offer.customerId}',
                   style: const TextStyle(fontSize: 22)),
-              Text('${loc.translate('Item ID')}: ${_offer.itemId}',
+              Text('${loc.translate('item_id')}: ${_offer.itemId}',
                   style: const TextStyle(fontSize: 22)),
               Text(
                   '${loc.translate('price_offered') ?? 'Price offered'}: \$${_offer.priceOffered.toStringAsFixed(2)}',

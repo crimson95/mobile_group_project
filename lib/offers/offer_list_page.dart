@@ -83,7 +83,7 @@ class OfferListPageState extends State<OfferListPage> {
             'ID ${o.id ?? '-'}  \$${o.priceOffered.toStringAsFixed(2)}',
           ),
           subtitle: Text(
-            'Customer: ${o.customerId}, Item: ${o.itemId}\n'
+            '${loc.translate('customer')}: ${o.customerId}, ${loc.translate('item')}: ${o.itemId}\n'
             '${loc.translate('date_of_offer') ?? 'Date of offer'}: ${o.dateOfOffer}',
           ),
           trailing: Icon(

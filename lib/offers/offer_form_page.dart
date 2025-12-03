@@ -100,8 +100,7 @@ class _OfferFormPageState extends State<OfferFormPage> {
         builder: (_) => AlertDialog(
           title: Text(loc.translate('req') ?? 'Required'),
           content: Text(
-            loc.translate(
-                'Please fill in all fields before saving.') ??
+            loc.translate('fill_msg') ??
                 'Please fill in all fields before saving.',
           ),
           actions: [
@@ -158,7 +157,7 @@ class _OfferFormPageState extends State<OfferFormPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              loc.translate('No changes detected.') ??
+              loc.translate('no_change') ??
                   'No changes detected.',
             ),
           ),
