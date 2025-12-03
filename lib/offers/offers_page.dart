@@ -1,85 +1,121 @@
 import 'package:flutter/material.dart';
+import 'offer_database.dart';
 import 'offer.dart';
-import 'offer_dao.dart';
-import 'offer_form_page.dart';
 import '../../AppLocalizations.dart';
+import 'offer_list_page.dart';
+import 'offer_detail_tablet.dart';
+import 'offer_form_page.dart';
 
-/// This screen displays all purchase offers currently stored in the database.
-/// It acts as the “list page” required by the assignment:
-/// - Shows items from the database
-/// - Lets the user tap an item to view/update/delete it
-/// - Has a floating button to add a brand-new offer
-/// Every time we return from the form page, we refresh the list so the
-/// user always sees the most up-to-date information.
-class OffersPage extends StatefulWidget {
-  const OffersPage({super.key});
+/// Top-level page for managing purchase offers.
+/// - Shows AppBar + FAB
+/// - On wide screens: List + Details side-by-side
+/// - On phones: only the list is visible
+class OfferPage extends StatefulWidget {
+  final OfferDatabase database;
+
+  const OfferPage({super.key, required this.database});
 
   @override
-  State<OffersPage> createState() => _OffersPageState();
+  State<OfferPage> createState() => _OfferPageState();
 }
 
-class _OffersPageState extends State<OffersPage> {
-  /// Local in-memory list of offers.
-  /// This is only used for displaying the list; the real data lives in SQLite.
-  List<Offer> offers = [];
+class _OfferPageState extends State<OfferPage> {
+  final GlobalKey<OfferListPageState> _listKey = GlobalKey<OfferListPageState>();
 
-  @override
-  void initState() {
-    super.initState();
-    _loadOffers(); // Load database items as soon as the page opens
+  Offer? _selectedOffer;
+
+  Future<void> _openNewOfferForm() async {
+    final loc = AppLocalizations.of(context)!;
+
+    final Offer? created = await Navigator.push<Offer?>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => OfferFormPage(
+          database: widget.database,
+          existingOffer: null,
+        ),
+      ),
+    );
+
+    if (created != null) {
+      // Reload list and select the newly created offer (on tablet).
+      _listKey.currentState?.reloadOffers();
+      setState(() {
+        _selectedOffer = created;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            loc.translate('offer_added') ?? 'Offer added.',
+          ),
+        ),
+      );
+    }
   }
-  /// Fetches all offers from the database using OfferDao.
-  ///
-  /// After retrieving them, we call `setState()` so Flutter rebuilds the UI
-  /// and shows the updated list immediately.
-  Future<void> _loadOffers() async {
-    offers = await OfferDao.instance.getOffers();
-    setState(() {});
+
+  /// Called when an offer was updated in a form or detail page.
+  void _onOfferUpdated(Offer updated) {
+    _listKey.currentState?.reloadOffers();
+    setState(() {
+      _selectedOffer = updated;
+    });
+  }
+
+  /// Called when an offer was deleted.
+  void _onOfferDeleted() {
+    _listKey.currentState?.reloadOffers();
+    setState(() {
+      _selectedOffer = null;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
+    final size = MediaQuery.of(context).size;
+    final bool isWide = size.width > size.height && size.width > 720;
+
     return Scaffold(
-      // Top bar of the screen — required “ActionBar”.
-      appBar: AppBar(                    // ACTION BAR HERE
-        title: Text(loc.translate('offers_title')!),
+      appBar: AppBar(
+        title: Text(loc.translate('offers_title') ?? 'Purchase offers'),
       ),
-      // Floating button >> opens the form page to add a new offer.
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => const OfferFormPage(),
-            ),
-          );
-          _loadOffers();
-        },
+        onPressed: _openNewOfferForm,
         child: const Icon(Icons.add),
       ),
-      // The main list of offers.
-      body: ListView.builder(
-        itemCount: offers.length,
-        itemBuilder: (context, index) {
-          final offer = offers[index];
-          return ListTile(
-            // Display the offer summary so the user gets quick information.
-          title: Text("Offer: \$${offer.price.toStringAsFixed(2)}"),
-            subtitle: Text("${loc.translate('customer_id')!}: ${offer.customerId}"),
-            // When tapped >> open the same form, but with existing data
-            // so the user can update or delete it.
-            onTap: () async {
-              await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => OfferFormPage(offer: offer),
-                ),
-              );
-              _loadOffers();
-            },
-          );
-        },
+      body: isWide
+          ? Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: OfferListPage(
+              key: _listKey,
+              database: widget.database,
+              isWide: true,
+              onOfferSelected: (offer) {
+                setState(() {
+                  _selectedOffer = offer;
+                });
+              },
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: OfferDetailTablet(
+              database: widget.database,
+              offer: _selectedOffer,
+              onOfferUpdated: _onOfferUpdated,
+              onOfferDeleted: _onOfferDeleted,
+            ),
+          ),
+        ],
+      )
+          : OfferListPage(
+        key: _listKey,
+        database: widget.database,
+        isWide: false,
+        onOfferSelected: null, // phone: navigation handled in list page
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'boats/pages/boat_list_page.dart';
 import 'CustomerPage/dao/customerDatabase.dart';
 import 'CustomerPage/pages/CustomerPage.dart';
 import 'CarPage/pages/carlistpage.dart';
+import 'offers/offer_database.dart';
 import 'offers/offers_page.dart';
 import 'AppLocalizations.dart';
 
@@ -11,33 +12,46 @@ import 'AppLocalizations.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  /// create Floor database
-  final database = await $FloorCustomerDatabase
+  // Customer DB
+  final customerDb = await $FloorCustomerDatabase
       .databaseBuilder('customer.db')
       .build();
 
-  runApp(MyApp(database: database));
+  // Offer DB
+  final offerDb = await $FloorOfferDatabase
+      .databaseBuilder('offer_database.db')
+      .build();
+
+  runApp(MyApp(
+    customerDatabase: customerDb,
+    offerDatabase: offerDb,
+  ));
 }
+
 
 /// Root widget of the application, stores the selected locale state.
 class MyApp extends StatefulWidget {
-  /// Shared Floor database instance
-  final CustomerDatabase database;
+  /// Shared Floor database instance for customers
+  final CustomerDatabase customerDatabase;
 
-  const MyApp({super.key, required this.database});
+  /// Shared Floor database instance for offers
+  final OfferDatabase offerDatabase;
 
-  /// Changes the application's active locale.
-  static void setLocale(BuildContext context, Locale newLocale) async {
+  const MyApp({
+    super.key,
+    required this.customerDatabase,
+    required this.offerDatabase,
+  });
 
+  static void setLocale(BuildContext context, Locale newLocale) {
     MyAppState? state = context.findAncestorStateOfType<MyAppState>();
     state?.changeLanguage(newLocale);
   }
 
   @override
-  MyAppState createState(){
-    return MyAppState();
-  }
+  MyAppState createState() => MyAppState();
 }
+
 
 /// Application state responsible for storing theme and locale information.
 class MyAppState extends State<MyApp>{
@@ -74,7 +88,8 @@ class MyAppState extends State<MyApp>{
           backgroundColor:Theme.of(context).colorScheme.inversePrimary,
         ),
       ),
-      home: MainMenu(database: widget.database),
+      home: MainMenu(database: widget.customerDatabase,
+        offerDb: widget.offerDatabase,),
     );
   }
 }
@@ -83,8 +98,9 @@ class MyAppState extends State<MyApp>{
 class MainMenu extends StatelessWidget {
   /// Provides access to the Floor database.
   final CustomerDatabase database;
+  final OfferDatabase offerDb;
 
-  const MainMenu({super.key, required this.database});
+  const MainMenu({super.key, required this.database, required this.offerDb,});
 
   /// Builds the language dropdown menu for selecting application locale.
   Widget _buildLanguageDropdown(BuildContext context) {
@@ -164,12 +180,16 @@ class MainMenu extends StatelessWidget {
                       MaterialPageRoute(builder: (_) => const CarListPage()),
                     );}),
                     ElevatedButton(
-                        child: Text(loc.translate('Boats for sale')!), onPressed: () {}),
+                        child: Text(loc.translate('Boats for sale')!), onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => const BoatListPage()),
+                      );}),
                     ElevatedButton(
                         child: Text(loc.translate('Purchase offers')!), onPressed: () {
-                          Navigator.push(context,
-                      MaterialPageRoute(
-                        builder: (_) => const OffersPage(),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => OfferPage(database: offerDb),
                       ),
                     );}),
                   ],
@@ -199,16 +219,18 @@ class MainMenu extends StatelessWidget {
                   ),
                   ElevatedButton(
                     child: Text(loc.translate('Boats for sale')!),
-                    onPressed: () {Navigator.push(context,
+                    onPressed: () {
+                      Navigator.push(context,
                       MaterialPageRoute(builder: (_) => const BoatListPage()),
                     );},
                   ),
                   ElevatedButton(
                     child: Text(loc.translate('Purchase offers')!),
                     onPressed: () {
-                      Navigator.push(context,
-                      MaterialPageRoute(
-                        builder: (_) => const OffersPage(),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => OfferPage(database: offerDb),
                       ),
                     );},
                   ),

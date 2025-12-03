@@ -1,129 +1,153 @@
 import 'package:flutter/material.dart';
+import 'offer_database.dart';
+import 'offer_dao.dart';
 import 'offer.dart';
 import '../../AppLocalizations.dart';
+import 'offer_form_page.dart';
 
-///  OfferDetailTablet
-///  This widget shows the details of a selected offer when the application
-///  is running on a **tablet or large screen** (width ≥ 800px).
-///  It is designed to appear on the **right side** of a split-view layout.
-///  The left side displays the list of offers, and the right side displays
-///  this detail panel.
-///  This file meets the professor’s requirement for a tablet-compatible
-///  detail view.
-class OfferDetailTablet extends StatelessWidget {
-  final Offer offer;
+/// Detail panel used in tablet/desktop mode (side-by-side with the list).
+class OfferDetailTablet extends StatefulWidget {
+  final OfferDatabase database;
+  final Offer? offer;
+
+  /// Called when the offer was updated.
+  final ValueChanged<Offer> onOfferUpdated;
+
+  /// Called when the offer was deleted.
+  final VoidCallback onOfferDeleted;
 
   const OfferDetailTablet({
     super.key,
+    required this.database,
     required this.offer,
+    required this.onOfferUpdated,
+    required this.onOfferDeleted,
   });
+
+  @override
+  State<OfferDetailTablet> createState() => _OfferDetailTabletState();
+}
+
+class _OfferDetailTabletState extends State<OfferDetailTablet> {
+  late OfferDAO _offerDAO;
+
+  @override
+  void initState() {
+    super.initState();
+    _offerDAO = widget.database.offerDAO;
+  }
+
+  Future<void> _editOffer() async {
+    final loc = AppLocalizations.of(context)!;
+    final offer = widget.offer;
+    if (offer == null) return;
+
+    final updated = await Navigator.push<Offer?>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => OfferFormPage(
+          database: widget.database,
+          existingOffer: offer,
+        ),
+      ),
+    );
+
+    if (updated != null) {
+      widget.onOfferUpdated(updated);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content:
+          Text(loc.translate('offer_updated') ?? 'Offer updated.'),
+        ),
+      );
+    }
+  }
+
+  Future<void> _deleteOffer() async {
+    final loc = AppLocalizations.of(context)!;
+    final offer = widget.offer;
+    if (offer == null) return;
+
+    final bool? shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(loc.translate('delete_offer') ?? 'Delete offer?'),
+        content: Text(
+          loc.translate('delete_offer_msg') ??
+              'Are you sure you want to delete this offer?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(loc.translate('Cancel') ?? 'Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(loc.translate('Delete') ?? 'Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldDelete == true) {
+      await _offerDAO.deleteOffer(offer);
+      widget.onOfferDeleted();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
-    return Card(
-      elevation: 3,
-      margin: const EdgeInsets.all(20),
-      surfaceTintColor: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(24),
+    final offer = widget.offer;
+
+    if (offer == null) {
+      return Center(
+        child: Text(
+          loc.translate('Please select an offer from the list.') ??
+              'Please select an offer from the list.',
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 20),
+        ),
+      );
+    }
+
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-
-            // Title
+            Text('ID: ${offer.id ?? '-'}',
+                style: const TextStyle(fontSize: 24)),
+            Text('Customer ID: ${offer.customerId}',
+                style: const TextStyle(fontSize: 24)),
+            Text('Item ID: ${offer.itemId}',
+                style: const TextStyle(fontSize: 24)),
             Text(
-              "Offer Details",
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                '${loc.translate('price_offered') ?? 'Price offered'}: \$${offer.priceOffered.toStringAsFixed(2)}',
+                style: const TextStyle(fontSize: 24)),
+            Text(
+                '${loc.translate('date_of_offer') ?? 'Date of offer'}: ${offer.dateOfOffer}',
+                style: const TextStyle(fontSize: 24)),
+            Text(
+              'Accepted: ${offer.accepted ? 'Yes' : 'No'}',
+              style: const TextStyle(fontSize: 24),
             ),
-
-            const SizedBox(height: 20),
-
-            // Customer ID
-            _detailRow(
-              label: loc.translate('customer_id')!,
-              value: offer.customerId,
-            ),
-
-            const SizedBox(height: 10),
-
-            // Boat or Car ID
-            _detailRow(
-              label: loc.translate('item_id')!,
-              value: offer.itemId,
-            ),
-
-            const SizedBox(height: 10),
-
-            // Price Offered
-            _detailRow(
-              label: loc.translate('price_offered')!,
-              value: "\$${offer.price.toStringAsFixed(2)}",
-            ),
-
-            const SizedBox(height: 10),
-
-            // Date of Offer
-            _detailRow(
-              label: loc.translate('date_of_offer')!,
-              value: offer.date,
-            ),
-
-            const SizedBox(height: 10),
-
-            // Accepted Switch-style label (text only)
-            _detailRow(
-              label: loc.translate('accepted')!,
-              value: offer.accepted ? "Yes" : "No",
-            ),
-
             const SizedBox(height: 30),
-
-
-            // Optional section: visual separator
-            const Divider(),
-
+            ElevatedButton(
+              onPressed: _editOffer,
+              child: Text(
+                  loc.translate('update_offer') ?? 'Update offer'),
+            ),
             const SizedBox(height: 10),
-
-            // Informational note (helps with UX + assignment marks)
-            Text(
-              loc.translate('offers_help_body')!,
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 13,
-              ),
+            ElevatedButton(
+              onPressed: _deleteOffer,
+              child: Text(loc.translate('Delete') ?? 'Delete'),
             ),
           ],
         ),
       ),
-    );
-  }
-
-  /// Helper method to build a row of labeled information.
-  ///
-  /// EXAMPLE:
-  ///   Customer ID:  C001
-  ///
-  /// This keeps the UI consistent and reduces duplicated code.
-  Widget _detailRow({
-    required String label,
-    required String value,
-  }) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "$label: ",
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Expanded(
-          child: Text(value),
-        ),
-      ],
     );
   }
 }
