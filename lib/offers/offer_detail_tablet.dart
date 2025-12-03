@@ -104,7 +104,7 @@ class _OfferDetailTabletState extends State<OfferDetailTablet> {
     if (offer == null) {
       return Center(
         child: Text(
-          loc.translate('Please select an offer from the list.') ??
+          loc.translate('select_msg') ??
               'Please select an offer from the list.',
           textAlign: TextAlign.center,
           style: const TextStyle(fontSize: 20),
@@ -120,9 +120,9 @@ class _OfferDetailTabletState extends State<OfferDetailTablet> {
           children: [
             Text('ID: ${offer.id ?? '-'}',
                 style: const TextStyle(fontSize: 24)),
-            Text('${loc.translate('Customer ID')}: ${offer.customerId}',
+            Text('${loc.translate('customer_id')}: ${offer.customerId}',
                 style: const TextStyle(fontSize: 24)),
-            Text('${loc.translate('Item ID')}: ${offer.itemId}',
+            Text('${loc.translate('item_id')}: ${offer.itemId}',
                 style: const TextStyle(fontSize: 24)),
             Text(
                 '${loc.translate('price_offered') ?? 'Price offered'}: \$${offer.priceOffered.toStringAsFixed(2)}',
@@ -131,7 +131,7 @@ class _OfferDetailTabletState extends State<OfferDetailTablet> {
                 '${loc.translate('date_of_offer') ?? 'Date of offer'}: ${offer.dateOfOffer}',
                 style: const TextStyle(fontSize: 24)),
             Text(
-              '${('Accepted')}: ${offer.accepted ? '${('Yes')}' : '${('No')}'}',
+              '${loc.translate('Accepted')}: ${offer.accepted ? '${loc.translate('yes') ?? 'Yes'}' : '${loc.translate('no') ?? 'No'}'}',
               style: const TextStyle(fontSize: 24),
             ),
             const SizedBox(height: 30),

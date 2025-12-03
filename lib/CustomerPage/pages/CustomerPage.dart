@@ -193,7 +193,7 @@ class _CustomerPageState extends State<CustomerPage> {
 
     if (noChanges) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(loc.translate("No changes detected.")!)),
+        SnackBar(content: Text(loc.translate("no_change")!)),
       );
       return;
     }

@@ -15,7 +15,7 @@
   "Customer updated.": "顧客資料已更新。",
   "Customer deleted.": "顧客已刪除。",
   "Last input restored.": "已套用上次輸入的資料。",
-  "No changes detected.": "資料無任何變化",
+  "no_change": "資料無任何變化",
   "How to use this page": "使用說明",
   "Help": "說明",
 
@@ -115,8 +115,6 @@
   "new_offer": "新增報價",
   "save_offer": "儲存報價",
   "update_offer": "更新報價",
-  "customer_id": "顧客編號",
-  "item_id": "車輛 / 船隻編號",
   "price_offered": "報價金額",
   "date_of_offer": "報價日期",
   "accepted": "已接受？",
@@ -134,6 +132,13 @@
   "offers_help_title": "如何使用此頁面",
   "offers_help_body": "• 點選「＋」按鈕以建立新報價。\n• 點選既有報價可進行編輯或刪除。\n• 報價資料會儲存至資料庫並於重啟後重新載入。",
   "form_help_title": "如何使用此頁面",
-  "form_help_body": "• 填寫所有欄位以建立新的報價。\n• 點選日曆圖示以選擇日期。\n• 使用開關切換報價是否被接受。\n• 在編輯模式中，可點選垃圾桶圖示刪除報價。"
+  "form_help_body": "• 填寫所有欄位以建立新的報價。\n• 點選日曆圖示以選擇日期。\n• 使用開關切換報價是否被接受。\n• 在編輯模式中，可點選垃圾桶圖示刪除報價。",
+  "customer_id": "顧客 ID",
+  "item_id": "商品 ID",
+  "customer": "顧客",
+  "item": "商品",
+  "Accepted": "已接受",
+  "select_msg": "請從列表中選擇一筆報價內容。",
+  "fill_msg": "存檔前請填寫所有欄位。"
 }
 

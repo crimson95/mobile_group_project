@@ -15,7 +15,7 @@
   "Customer updated.": "Customer updated.",
   "Customer deleted.": "Customer deleted.",
   "Last input restored.": "Last input restored.",
-  "No changes detected.": "No changes detected.",
+  "no_change": "No changes detected.",
   "How to use this page": "How to use this page",
   "Help": "Help",
 
@@ -114,8 +114,6 @@
   "new_offer": "New Offer",
   "save_offer": "Save Offer",
   "update_offer": "Update Offer",
-  "customer_id": "Customer ID",
-  "item_id": "Boat or Car ID",
   "price_offered": "Price offered",
   "date_of_offer": "Date of offer",
   "accepted": "Accepted?",
@@ -136,5 +134,12 @@
   "• Tap the + button to create a new offer.\n• Tap an existing offer to edit or delete it.\n• Offers are saved in the database and reloaded on restart.",
   "form_help_title": "How to Use This Page",
   "form_help_body":
-  "• Fill all fields to create a new offer.\n• Tap the calendar icon to choose a date.\n• Use the switch to mark offer as accepted.\n• In edit mode, tap the trash icon to delete."
+  "• Fill all fields to create a new offer.\n• Tap the calendar icon to choose a date.\n• Use the switch to mark offer as accepted.\n• In edit mode, tap the trash icon to delete.",
+  "customer_id": "Customer",
+  "item_id": "Item",
+  "customer": "Customer",
+  "item": "Item",
+  "Accepted": "Accepted",
+  "select_msg": "Please select an offer from the list.",
+  "fill_msg": "Please fill in all fields before saving."
 }
