@@ -1,6 +1,6 @@
 {
   "EN": "英",
-  "TW": "中",
+  "ZH": "中",
   "Main Menu": "主選單",
   "Customer Page": "顧客頁面",
   "Cars for sale": "汽車銷售",
@@ -73,5 +73,67 @@
   "confirm_save_title": "确认保存",
   "confirm_save_content": "是否保存该车辆？",
   "please_fill_all_fields": "请填写所有字段。",
-  "save_car": "保存车辆"
+  "save_car": "保存车辆",
+
+  "add_boat": "新增船舶",
+  "no_boats_yet": "目前沒有船舶資料",
+  "add_boat_button": "新增船舶",
+  "add_first_boat_button": "新增第一艘船",
+
+  "year_built": "建造年份",
+  "length_meters": "船長（公尺）",
+  "power_type": "動力類型（帆船/機動）",
+  "price": "價格",
+  "address": "地址",
+
+  "year_required": "請輸入建造年份",
+  "length_required": "請輸入船長",
+  "power_required": "請選擇動力類型",
+  "price_required": "請輸入價格",
+  "address_required": "請輸入地址",
+
+  "save": "儲存",
+  "boat_added": "成功新增船舶",
+  "boat_updated": "成功更新船舶",
+  "boat_deleted": "成功刪除船舶",
+
+  "boat_details": "船舶資訊",
+  "delete_boat":"刪除船舶",
+  "delete_boat_msg": "你確定要刪除該船舶？",
+
+  "copy_previous_boat_title": "複製上一艘船？",
+  "copy_previous_boat_message": "是否要使用上一艘新增的船舶資料作為起始值？",
+  "yes": "是",
+  "no": "否",
+
+  "instructions_title": "使用說明",
+  "instructions_message": "使用「新增」按鈕來建立新的船舶資料。點擊列表中的船舶可查看或編輯詳細資訊。長按或於詳細頁面中可進行更新或刪除。",
+
+  "offers_title": "購買報價",
+  "offers_button": "購買報價",
+  "home_title": "首頁（小組專案）",
+  "new_offer": "新增報價",
+  "save_offer": "儲存報價",
+  "update_offer": "更新報價",
+  "customer_id": "顧客編號",
+  "item_id": "車輛 / 船隻編號",
+  "price_offered": "報價金額",
+  "date_of_offer": "報價日期",
+  "accepted": "已接受？",
+  "copyprev_title": "複製上一筆報價？",
+  "copyprev_msg": "是否要複製上一筆建立的報價內容，或從空白表單開始？",
+  "blank": "空白",
+  "copy": "複製",
+  "delete_offer": "刪除報價？",
+  "delete_offer_msg": "確定要刪除此報價嗎？",
+  "offer_added": "已新增報價",
+  "offer_updated": "已更新報價",
+  "offer_deleted": "已刪除報價",
+  "req": "必填",
+  "enter_number": "請輸入數字",
+  "offers_help_title": "如何使用此頁面",
+  "offers_help_body": "• 點選「＋」按鈕以建立新報價。\n• 點選既有報價可進行編輯或刪除。\n• 報價資料會儲存至資料庫並於重啟後重新載入。",
+  "form_help_title": "如何使用此頁面",
+  "form_help_body": "• 填寫所有欄位以建立新的報價。\n• 點選日曆圖示以選擇日期。\n• 使用開關切換報價是否被接受。\n• 在編輯模式中，可點選垃圾桶圖示刪除報價。"
 }
+

@@ -1,6 +1,6 @@
 {
   "EN": "EN",
-  "TW": "TW",
+  "ZH": "ZH",
   "Main Menu": "Main Menu",
   "Customer Page": "Customer Page",
   "Cars for sale": "Cars for sale",
@@ -73,5 +73,68 @@
   "confirm_save_title": "Confirm Save",
   "confirm_save_content": "Do you want to save this car?",
   "please_fill_all_fields": "Please fill in all fields.",
-  "save_car": "Save Car"
+  "save_car": "Save Car",
+
+  "add_boat": "Add boat",
+  "no_boats_yet": "No boats yet",
+  "add_boat_button": "Add Boat",
+  "add_first_boat_button": "Add Your First Boat",
+
+  "year_built": "Year built",
+  "length_meters": "Length (meters)",
+  "power_type": "Power type (Sail/Motor)",
+  "price": "Price",
+  "address": "Address",
+
+  "year_required": "Year required",
+  "length_required": "Length required",
+  "power_required": "Power type required",
+  "price_required": "Price required",
+  "address_required": "Address required",
+
+  "save": "Save",
+  "boat_added": "Boat added",
+  "boat_updated": "Boat updated",
+  "boat_deleted": "Boat deleted",
+  "boat_details": "Boat Details",
+  "delete_boat":"Delete boat",
+  "delete_boat_msg": "Are you sure you want to delete this boat listing?",
+
+  "copy_previous_boat_title": "Copy previous boat?",
+  "copy_previous_boat_message": "Do you want to start with the values from the last boat you added?",
+  "yes": "Yes",
+  "no": "No",
+
+  "instructions_title": "How to use this screen",
+  "instructions_message": "Use the Add button to create a new boat listing. Tap an existing boat to view and edit its details. Long-press or use buttons on the details page to update or delete.",
+
+  "offers_title": "Purchase Offers",
+  "offers_button": "Purchase Offers",
+  "home_title": "Group Project Home",
+  "new_offer": "New Offer",
+  "save_offer": "Save Offer",
+  "update_offer": "Update Offer",
+  "customer_id": "Customer ID",
+  "item_id": "Boat or Car ID",
+  "price_offered": "Price offered",
+  "date_of_offer": "Date of offer",
+  "accepted": "Accepted?",
+  "copyprev_title": "Copy previous offer?",
+  "copyprev_msg":
+  "Do you want to copy the fields from the last created offer, or start with an empty form?",
+  "blank": "Blank",
+  "copy": "Copy",
+  "delete_offer": "Delete offer?",
+  "delete_offer_msg": "Are you sure you want to delete this offer?",
+  "offer_added": "Offer added",
+  "offer_updated": "Offer updated",
+  "offer_deleted": "Offer deleted",
+  "req": "Required",
+  "enter_number": "Enter a number",
+  "offers_help_title": "How to Use This Page",
+  "offers_help_body":
+  "• Tap the + button to create a new offer.\n• Tap an existing offer to edit or delete it.\n• Offers are saved in the database and reloaded on restart.",
+  "form_help_title": "How to Use This Page",
+  "form_help_body":
+  "• Fill all fields to create a new offer.\n• Tap the calendar icon to choose a date.\n• Use the switch to mark offer as accepted.\n• In edit mode, tap the trash icon to delete."
 }
