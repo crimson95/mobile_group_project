@@ -120,9 +120,9 @@ class _OfferDetailTabletState extends State<OfferDetailTablet> {
           children: [
             Text('ID: ${offer.id ?? '-'}',
                 style: const TextStyle(fontSize: 24)),
-            Text('Customer ID: ${offer.customerId}',
+            Text('${loc.translate('Customer ID')}: ${offer.customerId}',
                 style: const TextStyle(fontSize: 24)),
-            Text('Item ID: ${offer.itemId}',
+            Text('${loc.translate('Item ID')}: ${offer.itemId}',
                 style: const TextStyle(fontSize: 24)),
             Text(
                 '${loc.translate('price_offered') ?? 'Price offered'}: \$${offer.priceOffered.toStringAsFixed(2)}',
@@ -131,7 +131,7 @@ class _OfferDetailTabletState extends State<OfferDetailTablet> {
                 '${loc.translate('date_of_offer') ?? 'Date of offer'}: ${offer.dateOfOffer}',
                 style: const TextStyle(fontSize: 24)),
             Text(
-              'Accepted: ${offer.accepted ? 'Yes' : 'No'}',
+              '${('Accepted')}: ${offer.accepted ? '${('Yes')}' : '${('No')}'}',
               style: const TextStyle(fontSize: 24),
             ),
             const SizedBox(height: 30),

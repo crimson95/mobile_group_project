@@ -97,9 +97,9 @@ class _OfferDetailPageState extends State<OfferDetailPage> {
             children: [
               Text('ID: ${_offer.id ?? '-'}',
                   style: const TextStyle(fontSize: 22)),
-              Text('Customer ID: ${_offer.customerId}',
+              Text('${loc.translate('Customer ID')}: ${_offer.customerId}',
                   style: const TextStyle(fontSize: 22)),
-              Text('Item ID: ${_offer.itemId}',
+              Text('${loc.translate('Item ID')}: ${_offer.itemId}',
                   style: const TextStyle(fontSize: 22)),
               Text(
                   '${loc.translate('price_offered') ?? 'Price offered'}: \$${_offer.priceOffered.toStringAsFixed(2)}',
@@ -108,7 +108,7 @@ class _OfferDetailPageState extends State<OfferDetailPage> {
                   '${loc.translate('date_of_offer') ?? 'Date of offer'}: ${_offer.dateOfOffer}',
                   style: const TextStyle(fontSize: 22)),
               Text(
-                'Accepted: ${_offer.accepted ? 'Yes' : 'No'}',
+                '${loc.translate('Accepted')}: ${_offer.accepted ? '${loc.translate('Yes')}' : '${loc.translate('No')}'}',
                 style: const TextStyle(fontSize: 22),
               ),
               const SizedBox(height: 30),

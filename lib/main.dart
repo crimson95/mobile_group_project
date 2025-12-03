@@ -71,8 +71,6 @@ class MyAppState extends State<MyApp>{
       supportedLocales: const [
         Locale('en','CA'),
         Locale('zh'),
-        Locale('ar'),
-        Locale('fr'),
       ],
       localizationsDelegates: const [
         AppLocalizations.delegate,
@@ -129,14 +127,6 @@ class MainMenu extends StatelessWidget {
           DropdownMenuItem(
             value: Locale('zh'),
             child: Text(loc.translate('ZH')!),
-          ),
-          DropdownMenuItem(
-            value: Locale('ar'),
-            child: Text('AR'),
-          ),
-          DropdownMenuItem(
-            value: Locale('fr'),
-            child: Text('FR'),
           ),
         ],
       ),
